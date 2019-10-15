@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "schmidts katz",
+  "name": "Schmidt's Katz",
   "version": "1.0",
   "description": "control media with shortcuts",
   "icons": {
@@ -8,7 +8,7 @@
   },
   "browser_action": {
     "default_icon": "icons/icon128.png",
-    "default_title": "Schmidts katz",
+    "default_title": "Schmidt's Katz",
     "default_popup": "popup.html"
   },
   "background": {
