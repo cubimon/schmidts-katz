@@ -27,17 +27,17 @@
       },
       "description": "Stop all players"
     },
-    "forward": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+F"
-      },
-      "description": "Seek forward"
-    },
     "backward": {
       "suggested_key": {
         "default": "Ctrl+Alt+S"
       },
       "description": "Seek backwards"
+    },
+    "forward": {
+      "suggested_key": {
+        "default": "Ctrl+Alt+F"
+      },
+      "description": "Seek forward"
     },
     "play-prev": {
       "suggested_key": {
@@ -57,29 +57,29 @@
       },
       "description": "Toggle mute"
     },
-    "volume-up": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+R"
-      },
-      "description": "Increase volume"
-    },
     "volume-down": {
       "suggested_key": {
         "default": "Ctrl+Alt+W"
       },
       "description": "Decrease volume"
     },
-    "playback-rate-increase": {
+    "volume-up": {
       "suggested_key": {
-        "default": "Ctrl+Alt+B"
+        "default": "Ctrl+Alt+R"
       },
-      "description": "Increases playback speed"
+      "description": "Increase volume"
     },
     "playback-rate-decrease": {
       "suggested_key": {
         "default": "Ctrl+Alt+Y"
       },
       "description": "Decrease playback speed"
+    },
+    "playback-rate-increase": {
+      "suggested_key": {
+        "default": "Ctrl+Alt+B"
+      },
+      "description": "Increases playback speed"
     },
     "like": {
       "suggested_key": {

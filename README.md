@@ -4,7 +4,6 @@ Control your music and videos with keyboard shortcuts like Schmidt's Katz in a u
 
 ## TODOs
 
-- remove minification/webpack?
 - Popup
 - Support for other websites than youtube
 - MPRIS

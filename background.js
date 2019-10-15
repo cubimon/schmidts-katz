@@ -113,11 +113,11 @@ browser.commands.onCommand.addListener((command) => {
     case 'stop':
       controller.stop()
       break
-    case 'forward':
-      controller.setCurrentTime(controller.currentTime + 10.0)
-      break
     case 'backward':
       controller.setCurrentTime(controller.currentTime - 10.0)
+      break
+    case 'forward':
+      controller.setCurrentTime(controller.currentTime + 10.0)
       break
     case 'play-prev':
       controller.playPrev()
@@ -128,17 +128,17 @@ browser.commands.onCommand.addListener((command) => {
     case 'toggle-mute':
       controller.toggleMute()
       break
-    case 'volume-up':
-      controller.setVolume(controller.volume + 0.05)
-      break
     case 'volume-down':
       controller.setVolume(controller.volume - 0.05)
       break
-    case 'playback-rate-increase':
-      controller.setPlaybackRate(controller.playbackRate + 0.05)
+    case 'volume-up':
+      controller.setVolume(controller.volume + 0.05)
       break
     case 'playback-rate-decrease':
       controller.setPlaybackRate(controller.playbackRate - 0.05)
+      break
+    case 'playback-rate-increase':
+      controller.setPlaybackRate(controller.playbackRate + 0.05)
       break
     case 'like':
       controller.like()
