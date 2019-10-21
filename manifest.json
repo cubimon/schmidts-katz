@@ -9,7 +9,7 @@
   "browser_action": {
     "default_icon": "icons/icon128.png",
     "default_title": "Schmidt's Katz",
-    "default_popup": "popup.html"
+    "default_popup": "popup/popup.html"
   },
   "background": {
     "scripts": ["background.js"]

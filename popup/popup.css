@@ -1,0 +1,42 @@
+:root {
+    --elem-size: 3.0em;
+    --icon-size: 2.0em;
+    --space: 0.5em;
+    --disabled-color: gray;
+    --enabled-color: white;
+}
+body {
+    width: calc(var(--elem-size) * 5);
+    margin: 0;
+    background-color: #404040;
+}
+span {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.svg {
+    width: calc(var(--elem-size) - 2 * var(--space));
+    height: calc(var(--elem-size) - 2 * var(--space));
+    padding: var(--space);
+    display: flex;
+    align-items: center;
+}
+.svg > object {
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
+.volume-slider {
+    width: 100%;
+    padding: var(--space);
+}
+.time-slider {
+    width: 100%;
+    padding: var(--space);
+}
+.text {
+    color: white;
+    font-weight: bold;
+    padding: var(--space);
+}

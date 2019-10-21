@@ -5,6 +5,7 @@ Control your music and videos with keyboard shortcuts like Schmidt's Katz in a u
 ## TODOs
 
 - Popup
+- Update status on website video change
 - Support for other websites than youtube
 - MPRIS
 - Window 10 media overlay
