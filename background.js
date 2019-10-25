@@ -6,9 +6,8 @@ browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
 
 // called if user switches tab
 browser.tabs.onActivated.addListener((activeInfo) => {
-  if (activeInfo.tabId in controllerStack) {
+  if (activeInfo.tabId in controllerStack)
     updateControllerTabId(activeInfo.tabId)
-  }
 })
 
 class BackgroundController {
@@ -90,25 +89,22 @@ class BackgroundController {
   }
 
   setStatus(status) {
-    for (let attrName in status) {
+    for (let attrName in status)
       this[attrName] = status[attrName]
-    }
   }
 }
 
 // commands listener
 browser.commands.onCommand.addListener((command) => {
   let controller = getActiveController()
-  if (!controller) {
+  if (!controller)
     return
-  }
   switch (command) {
     case 'play-pause':
-      if (controller.paused) {
+      if (controller.paused)
         controller.play()
-      } else {
+      else
         controller.pause()
-      }
       break
     case 'stop':
       controller.stop()
@@ -153,12 +149,13 @@ browser.commands.onCommand.addListener((command) => {
 let controllers = {}
 // tab ids in order they were created
 let controllerStack = []
+// true if popup is opened, false otherwise
+let isPopupOpen = false
 
 // null if no controller
 function getActiveTabId() {
-  if (controllerStack.length == 0) {
+  if (controllerStack.length == 0)
     return null
-  }
   return controllerStack[controllerStack.length - 1]
 }
 
@@ -169,12 +166,10 @@ function getActiveController() {
 
 // get tab controller by tab id
 function getController(tabId) {
-  if (tabId == null) {
+  if (tabId == null)
     return null
-  }
-  if (!(tabId in controllers)) {
+  if (!(tabId in controllers))
     return null
-  }
   return controllers[tabId]
 }
 
@@ -187,27 +182,70 @@ function updateControllerTabId(tabId) {
 // remove tab id from controller stack
 function removeControllerTabId(tabId) {
   let index = controllerStack.indexOf(tabId)
-  if (index >= 0) {
+  if (index >= 0)
     controllerStack.splice(index, 1)
-  }
 }
 
+// TODO: add function handleMessage that works with commands and messages
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log(message)
+  console.log(`background message: ${JSON.stringify(message)}`)
   switch (message.action) {
     case 'register':
       controllers[sender.tab.id] =
           new BackgroundController(sender.tab.id, message.status)
       updateControllerTabId(sender.tab.id)
-      break
+      return
     case 'unregister':
       delete controllers[sender.tab.id]
       removeControllerTabId(sender.tab.id)
-      break
+      return
     case 'update-status':
-      if (controllers[sender.tab.id]) {
+      // call from website
+      if (controllers[sender.tab.id])
         controllers[sender.tab.id].setStatus(message.status)
+      return
+    case 'popup opened':
+      isPopupOpen = true
+      if (getActiveTabId() != null) {
+        browser.tabs.sendMessage(getActiveTabId(), {
+          action: 'request-status'
+        })
       }
+      return
+    case 'popup closed':
+      isPopupOpen = false
+      return
+  }
+  let controller = getActiveController()
+  if (!controller)
+    return
+  switch (message.action) {
+    case 'play-pause':
+      if (controller.paused)
+        controller.play()
+      else
+        controller.pause()
+      break
+    case 'current-time':
+      controller.setCurrentTime(message.currentTime)
+      break
+    case 'play-prev':
+      controller.playPrev()
+      break
+    case 'play-next':
+      controller.playNext()
+      break
+    case 'toggle-mute':
+      controller.toggleMute()
+      break
+    case 'volume':
+      controller.setVolume(message.volume)
+      break
+    case 'like':
+      controller.like()
+      break
+    case dislike:
+      controller.dislike()
       break
   }
 })

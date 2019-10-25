@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Universl media shortcut key",
   "scripts": {
-    "prepare": "node prepare.js"
+    "prepare": "make prepare"
   },
   "keywords": [
     "commands",

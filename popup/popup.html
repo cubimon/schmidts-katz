@@ -1,45 +1,50 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="../icons/fontawesome/css/all.min.css">
   <link rel="stylesheet" type="text/css" href="popup.css">
 </head>
 <body>
-  <span>
-    <div class="svg" tabindex="0">
-      <object data="../icons/fontawesome/volume-mute.svg" tabindex="-1" id="volume-icon"></object>
-    </div>
-    <input class="volume-slider" type="range" min="0" max="0" value="0" id="volume-slider" tabindex="0">
-    <a class="text">0%</a>
-  </span>
-  <span>
-    <div class="svg" tabindex="0">
-      <object data="../icons/fontawesome/fast-backward.svg" tabindex="-1"></object>
-    </div>
-    <div class="svg" tabindex="0">
-      <object data="../icons/fontawesome/step-backward.svg" tabindex="-1"></object>
-    </div>
-    <div class="svg" tabindex="0">
-      <object data="../icons/fontawesome/play.svg" tabindex="-1"></object>
-    </div>
-    <div class="svg" tabindex="0">
-      <object data="../icons/fontawesome/step-forward.svg" tabindex="-1"></object>
-    </div>
-    <div class="svg" tabindex="0">
-      <object data="../icons/fontawesome/fast-forward.svg" tabindex="-1"></object>
-    </div>
-  </span>
-  <span>
-    <a class="text">--:--</a>
-    <input class="time-slider" type="range" min="0" max="0" value="0" id="time-slider" tabindex="0">
-    <a class="text">--:--</a>
-  </span>
-  <span>
-    <div class="svg" tabindex="0">
-      <object data="../icons/fontawesome/thumbs-up.svg" tabindex="-1"></object>
-    </div>
-    <div class="svg" tabindex="0">
-      <object data="../icons/fontawesome/thumbs-down.svg" tabindex="-1"></object>
-    </div>
-  </span>
+  <div id="content">
+    <span>
+      <a class="title disabled" title="‒" id="title">‒</a>
+    </span>
+    <span>
+      <i class="fa fa-volume-mute fa-2x disabled" id="volume-icon"></i>
+      <input class="slider" type="range" min="0" max="100" value="0" id="volume-slider" disabled>
+      <label class="text disabled" for="volume-slider" id="volume-text">‒%</label>
+    </span>
+    <span>
+      <button id="play-prev" disabled>
+        <i class="fa fa-fast-backward fa-2x"></i>
+      </button>
+      <button id="backward" disabled>
+        <i class="fa fa-step-backward fa-2x"></i>
+      </button>
+      <button id="play-pause" disabled>
+        <i class="fa fa-play fa-2x"></i>
+      </button>
+      <button id="forward" disabled>
+        <i class="fa fa-step-forward fa-2x"></i>
+      </button>
+      <button id="play-next" disabled>
+        <i class="fa fa-fast-forward fa-2x"></i>
+      </button>
+    </span>
+    <span>
+      <label class="text disabled" for="time-slider" id="time-current">--:--</label>
+      <input class="slider" type="range" min="0" max="0" value="0" id="time-slider" disabled>
+      <label class="text disabled" for="time-slider" id="time-duration">--:--</label>
+    </span>
+    <span>
+      <button id="like" disabled>
+        <i class="fa fa-thumbs-up fa-2x"></i>
+      </button>
+      <button id="dislike" disabled>
+        <i class="fa fa-thumbs-down fa-2x"></i>
+      </button>
+    </span>
+  </div>
+  <script src="popup.js"></script>
 </body>
 </html>

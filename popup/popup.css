@@ -1,42 +1,51 @@
 :root {
-    --elem-size: 3.0em;
-    --icon-size: 2.0em;
-    --space: 0.5em;
-    --disabled-color: gray;
-    --enabled-color: white;
+  --background-color: 404040;
+  --foreground-color: white;
+  --disabled-color: gray;
 }
 body {
-    width: calc(var(--elem-size) * 5);
-    margin: 0;
-    background-color: #404040;
+  width: 18em;
+  margin: 0;
+  background-color: var(--background-color);
 }
 span {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  margin: 0.1em;
+  display: flex;
+  align-items: center;
+  align-content: space-around;
 }
-.svg {
-    width: calc(var(--elem-size) - 2 * var(--space));
-    height: calc(var(--elem-size) - 2 * var(--space));
-    padding: var(--space);
-    display: flex;
-    align-items: center;
+button {
+  width: 100%;
+  background: transparent;
+  border: none;
 }
-.svg > object {
-    width: var(--icon-size);
-    height: var(--icon-size);
+i {
+  margin: 0.2em;
+  color: var(--foreground-color);
 }
-.volume-slider {
-    width: 100%;
-    padding: var(--space);
+button:disabled > i {
+  color: var(--disabled-color);
 }
-.time-slider {
-    width: 100%;
-    padding: var(--space);
+.title {
+  width: 100%;
+  margin: 0.2em;
+  text-align: center;
+  font-size: 150%;
+  font-weight: bold;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--foreground-color);
+}
+.slider {
+  width: 100%;
+  padding: 0.5em;
+  background: var(--background-color);
 }
 .text {
-    color: white;
-    font-weight: bold;
-    padding: var(--space);
+  padding: 0.5em;
+  font-weight: bold;
+  color: var(--foreground-color);
+}
+.disabled {
+  color: var(--disabled-color);
 }
