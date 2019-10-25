@@ -157,15 +157,21 @@ class AbstractController {
     let status = {}
     if (this.paused != null)
       status.paused = this.paused
-    if (this.currentTime != null)
+    if (this.currentTime != null
+        && typeof(this.currentTime) == 'number'
+        && !isNaN(this.currentTime))
       status.currentTime = this.currentTime
-    if (this.duration != null)
+    if (this.duration != null
+        && typeof(this.duration) == 'number'
+        && !isNaN(this.duration))
       status.duration = this.duration
     status.canPlayPrev = this.canPlayPrev != null && this.canPlayPrev()
     status.canPlayNext = this.canPlayNext != null && this.canPlayNext()
     if (this.muted)
       status.muted = this.muted
-    if (this.volume)
+    if (this.volume != null
+        && typeof(this.volume) == 'number'
+        && !isNaN(this.volume))
       status.volume = this.volume
     if (this.playbackRate != null)
       status.playbackRate = this.playbackRate

@@ -150,16 +150,16 @@ function updateStatus(status) {
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
-  $('#volume-icon').addEventListener('onclick', this.toggleMute.bind(this))
+  $('#volume-icon').addEventListener('click', this.toggleMute.bind(this))
   $('#volume-slider').addEventListener('change', this.setVolume.bind(this))
-  $('#play-prev').addEventListener('onclick', this.playPrev.bind(this))
-  $('#backward').addEventListener('onclick', this.backward.bind(this))
-  $('#play-pause').addEventListener('onclick', this.playPause.bind(this))
-  $('#forward').addEventListener('onclick', this.forward.bind(this))
-  $('#play-next').addEventListener('onclick', this.playNext.bind(this))
+  $('#play-prev').addEventListener('click', this.playPrev.bind(this))
+  $('#backward').addEventListener('click', this.backward.bind(this))
+  $('#play-pause').addEventListener('click', this.playPause.bind(this))
+  $('#forward').addEventListener('click', this.forward.bind(this))
+  $('#play-next').addEventListener('click', this.playNext.bind(this))
   $('#time-slider').addEventListener('change', this.setCurrentTime.bind(this))
-  $('#like').addEventListener('onclick', this.like.bind(this))
-  $('#dislike').addEventListener('onclick', this.dislike.bind(this))
+  $('#like').addEventListener('click', this.like.bind(this))
+  $('#dislike').addEventListener('click', this.dislike.bind(this))
   browser.runtime.sendMessage({
     action: 'popup opened'
   })

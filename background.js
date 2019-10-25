@@ -229,6 +229,12 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'current-time':
       controller.setCurrentTime(message.currentTime)
       break
+    case 'backward':
+      controller.setCurrentTime(controller.currentTime - 10.0)
+      break
+    case 'forward':
+      controller.setCurrentTime(controller.currentTime + 10.0)
+      break
     case 'play-prev':
       controller.playPrev()
       break
@@ -244,7 +250,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'like':
       controller.like()
       break
-    case dislike:
+    case 'dislike':
       controller.dislike()
       break
   }
