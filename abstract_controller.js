@@ -11,6 +11,7 @@ class AbstractController {
    * @param {map} selectors {playPrev: selector, playNext: selector, like: selector, dislike: selector}, all selectors are optional
    */
   constructor(mediaSelector = 'video', selectors = {}) {
+    this.statusCache = null
     this.mediaSelector = mediaSelector
     for (let method in selectors) {
       let selector = selectors[method]
@@ -186,6 +187,7 @@ class AbstractController {
 
   onMessage(message, sender, sendResponse) {
     console.log(message)
+    let forceUpdate = false
     switch (message.action) {
       case 'play':
         this.play()
@@ -226,9 +228,10 @@ class AbstractController {
           this.dislike()
         break
       case 'request-status':
+        forceUpdate = true
         break
     }
-    this.updateStatus()
+    this.updateStatus(forceUpdate)
   }
 
   /**
@@ -301,14 +304,19 @@ class AbstractController {
   }
 
   /**
-   * send status to background
+   * send status to background if a attribute changed
+   * @param {bool} forceUpdate if true, this will always send the message even without changes
    */
-  updateStatus() {
+  updateStatus(forceUpdate) {
     if (!this.isRegistered)
       return
+    let status = this.status()
+    if (JSON.stringify(status) == JSON.stringify(this.statusCache) && !forceUpdate)
+      return
+    this.statusCache = status
     browser.runtime.sendMessage({
       action: 'update-status',
-      status: this.status()
+      status: status
     })
   }
 }
