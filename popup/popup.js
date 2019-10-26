@@ -131,8 +131,8 @@ function updateStatus(status) {
     let labels = timeToText(status.currentTime, status.duration)
     $('#time-current').innerHTML = labels[0]
     $('#time-current').classList.remove('disabled')
-    $('#time-slider').value = Math.floor(status.currentTime)
     $('#time-slider').max = Math.floor(status.duration)
+    $('#time-slider').value = Math.floor(status.currentTime)
     $('#time-slider').disabled = false
     $('#time-duration').innerHTML = labels[1]
     $('#time-duration').classList.remove('disabled')
@@ -162,12 +162,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
   $('#dislike').addEventListener('click', this.dislike.bind(this))
   browser.runtime.sendMessage({
     action: 'popup opened'
-  })
-})
-
-window.addEventListener('unload', (event) => {
-  browser.runtime.sendMessage({
-    action: 'popup closed'
   })
 })
 

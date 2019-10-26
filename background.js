@@ -94,63 +94,10 @@ class BackgroundController {
   }
 }
 
-// commands listener
-browser.commands.onCommand.addListener((command) => {
-  let controller = getActiveController()
-  if (!controller)
-    return
-  switch (command) {
-    case 'play-pause':
-      if (controller.paused)
-        controller.play()
-      else
-        controller.pause()
-      break
-    case 'stop':
-      controller.stop()
-      break
-    case 'backward':
-      controller.setCurrentTime(controller.currentTime - 10.0)
-      break
-    case 'forward':
-      controller.setCurrentTime(controller.currentTime + 10.0)
-      break
-    case 'play-prev':
-      controller.playPrev()
-      break
-    case 'play-next':
-      controller.playNext()
-      break
-    case 'toggle-mute':
-      controller.toggleMute()
-      break
-    case 'volume-down':
-      controller.setVolume(controller.volume - 0.05)
-      break
-    case 'volume-up':
-      controller.setVolume(controller.volume + 0.05)
-      break
-    case 'playback-rate-decrease':
-      controller.setPlaybackRate(controller.playbackRate - 0.05)
-      break
-    case 'playback-rate-increase':
-      controller.setPlaybackRate(controller.playbackRate + 0.05)
-      break
-    case 'like':
-      controller.like()
-      break
-    case 'dislike':
-      controller.dislike()
-      break
-  }
-})
-
 // tab id -> controller
 let controllers = {}
 // tab ids in order they were created
 let controllerStack = []
-// true if popup is opened, false otherwise
-let isPopupOpen = false
 
 // null if no controller
 function getActiveTabId() {
@@ -186,54 +133,52 @@ function removeControllerTabId(tabId) {
     controllerStack.splice(index, 1)
 }
 
-// TODO: add function handleMessage that works with commands and messages
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log(`background message: ${JSON.stringify(message)}`)
-  switch (message.action) {
+function processMessage(action, message, tabId) {
+  // messages from controller (website) by tabId or popup
+  switch (action) {
     case 'register':
-      controllers[sender.tab.id] =
-          new BackgroundController(sender.tab.id, message.status)
-      updateControllerTabId(sender.tab.id)
+      controllers[tabId] = new BackgroundController(tabId, message.status)
+      updateControllerTabId(tabId)
       return
     case 'unregister':
-      delete controllers[sender.tab.id]
-      removeControllerTabId(sender.tab.id)
+      delete controllers[tabId]
+      removeControllerTabId(tabId)
       return
     case 'update-status':
-      // call from website
-      if (controllers[sender.tab.id])
-        controllers[sender.tab.id].setStatus(message.status)
+      // call from controller (website)
+      if (controllers[tabId])
+        controllers[tabId].setStatus(message.status)
       return
     case 'popup opened':
-      isPopupOpen = true
-      if (getActiveTabId() != null) {
+      // from popup
+      if (getActiveTabId() != null)
         browser.tabs.sendMessage(getActiveTabId(), {
           action: 'request-status'
         })
-      }
-      return
-    case 'popup closed':
-      isPopupOpen = false
       return
   }
+  // no tabId/use latest active controller
   let controller = getActiveController()
   if (!controller)
     return
-  switch (message.action) {
+  switch (action) {
     case 'play-pause':
       if (controller.paused)
         controller.play()
       else
         controller.pause()
       break
-    case 'current-time':
-      controller.setCurrentTime(message.currentTime)
+    case 'stop':
+      controller.stop()
       break
     case 'backward':
       controller.setCurrentTime(controller.currentTime - 10.0)
       break
     case 'forward':
       controller.setCurrentTime(controller.currentTime + 10.0)
+      break
+    case 'current-time':
+      controller.setCurrentTime(message.currentTime)
       break
     case 'play-prev':
       controller.playPrev()
@@ -244,8 +189,20 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'toggle-mute':
       controller.toggleMute()
       break
+    case 'volume-down':
+      controller.setVolume(controller.volume - 0.05)
+      break
+    case 'volume-up':
+      controller.setVolume(controller.volume + 0.05)
+      break
     case 'volume':
       controller.setVolume(message.volume)
+      break
+    case 'playback-rate-decrease':
+      controller.setPlaybackRate(controller.playbackRate - 0.05)
+      break
+    case 'playback-rate-increase':
+      controller.setPlaybackRate(controller.playbackRate + 0.05)
       break
     case 'like':
       controller.like()
@@ -254,4 +211,16 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
       controller.dislike()
       break
   }
+}
+
+// commands listener
+browser.commands.onCommand.addListener((command) => {
+  processMessage(command)
+})
+
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  let tabId = null
+  if ('tab' in sender)
+    tabId = sender.tab.id
+  processMessage(message.action, message, tabId)
 })
