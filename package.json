@@ -17,5 +17,8 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2"
+  },
+  "dependencies": {
+    "mpris-service": "^2.1.0"
   }
 }

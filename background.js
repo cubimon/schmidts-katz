@@ -134,7 +134,7 @@ function removeControllerTabId(tabId) {
 }
 
 function processMessage(action, message, tabId) {
-  // messages from controller (website) by tabId or popup
+  // messages from website/popup
   switch (action) {
     case 'register':
       controllers[tabId] = new BackgroundController(tabId, message.status)
@@ -204,6 +204,9 @@ function processMessage(action, message, tabId) {
     case 'playback-rate-increase':
       controller.setPlaybackRate(controller.playbackRate + 0.05)
       break
+    case 'playback-rate':
+      controller.setPlaybackRate(message.playbackRate)
+      break
     case 'like':
       controller.like()
       break
@@ -213,14 +216,19 @@ function processMessage(action, message, tabId) {
   }
 }
 
-// commands listener
-browser.commands.onCommand.addListener((command) => {
-  processMessage(command)
-})
+// commands
+browser.commands.onCommand.addListener(this.processMessage.bind(this))
 
+// messages from website/popup
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   let tabId = null
   if ('tab' in sender)
     tabId = sender.tab.id
   processMessage(message.action, message, tabId)
 })
+
+// native/mpris
+var port = browser.runtime.connectNative("mpris")
+if (port) {
+  port.onMessage.addListener(this.processMessage.bind(this))
+}

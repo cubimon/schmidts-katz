@@ -8,44 +8,54 @@ class AbstractController {
   /**
    * all parameters are optional
    * @param {string} mediaSelector selector to find audio/video element in DOM
-   * @param {map} selectors {playPrev: selector, playNext: selector, like: selector, dislike: selector}, all selectors are optional
+   * @param {map} options {
+   *   media: selector,
+   *   playPrev: selector,
+   *   playNext: selector,
+   *   like: selector,
+   *   dislike: selector
+   * },
+   * all selectors are optional
    */
-  constructor(mediaSelector = 'video', selectors = {}) {
+  constructor(options = {}) {
     this.statusCache = null
-    this.mediaSelector = mediaSelector
-    for (let method in selectors) {
-      let selector = selectors[method]
-      switch (method) {
+    this.mediaSelector = 'video'
+    for (let optionName in options) {
+      let optionValue = options[optionName]
+      switch (optionName) {
+        case 'media':
+          this.mediaSelector = optionValue
+          break
         case 'playPrev':
-          this.playPrev = this.click.bind(this, selector)
+          this.playPrev = this.click.bind(this, optionValue)
           this.canPlayPrev = () => {
-            let element = $(selector)
+            let element = $(optionValue)
             return element != null && this.isVisible(element)
           }
           break
         case 'playNext':
-          this.playNext = this.click.bind(this, selector)
+          this.playNext = this.click.bind(this, optionValue)
           this.canPlayNext = () => {
-            let element = $(selector)
+            let element = $(optionValue)
             return element != null && this.isVisible(element)
           }
           break
         case 'like':
-          this.like = this.click.bind(this, selector)
+          this.like = this.click.bind(this, optionValue)
           this.canLike = () => {
-            let element = $(selector)
+            let element = $(optionValue)
             return element != null && this.isVisible(element)
           }
           break
         case 'dislike':
-          this.dislike = this.click.bind(this, selector)
+          this.dislike = this.click.bind(this, optionValue)
           this.canDislike = () => {
-            let element = $(selector)
+            let element = $(optionValue)
             return element != null && this.isVisible(element)
           }
           break
         case 'title':
-          this.title = this.text.bind(this, selector)
+          this.title = this.text.bind(this, optionValue)
           break
       }
     }
@@ -73,6 +83,10 @@ class AbstractController {
     return null
   }
 
+  canSeek() {
+    return true
+  }
+
   get currentTime() {
     let media = this.getMedia()
     if (media)
@@ -93,11 +107,15 @@ class AbstractController {
     return null
   }
 
-  canPlayPrev = null
+  canPlayPrev() {
+    return false
+  }
 
   playPrev = null
 
-  canPlayNext = null
+  canPlayNext() {
+    return false
+  }
 
   playNext = null
 
@@ -140,11 +158,15 @@ class AbstractController {
       media.playbackRate = playbackRate
   }
 
-  canLike = null
+  canLike() {
+    return false
+  }
 
   like = null
 
-  canDislike = null
+  canDislike() {
+    return false
+  }
 
   dislike = null
 
@@ -158,16 +180,18 @@ class AbstractController {
     let status = {}
     if (this.paused != null)
       status.paused = this.paused
-    if (this.currentTime != null
+    if (this.canSeek()
+        && this.currentTime != null
         && typeof(this.currentTime) == 'number'
         && !isNaN(this.currentTime))
       status.currentTime = this.currentTime
-    if (this.duration != null
+    if (this.canSeek()
+        && this.duration != null
         && typeof(this.duration) == 'number'
         && !isNaN(this.duration))
       status.duration = this.duration
-    status.canPlayPrev = this.canPlayPrev != null && this.canPlayPrev()
-    status.canPlayNext = this.canPlayNext != null && this.canPlayNext()
+    status.canPlayPrev = this.canPlayPrev()
+    status.canPlayNext = this.canPlayNext()
     if (this.muted)
       status.muted = this.muted
     if (this.volume != null
@@ -176,8 +200,8 @@ class AbstractController {
       status.volume = this.volume
     if (this.playbackRate != null)
       status.playbackRate = this.playbackRate
-    status.canLike    = this.canLike    != null && this.canLike()
-    status.canDislike = this.canDislike != null && this.canDislike()
+    status.canLike = this.canLike()
+    status.canDislike = this.canDislike()
     if (this.title != null)
       status.title = this.title()
     if (this.artwork != null)
@@ -326,13 +350,19 @@ function autoRegisterController(
     controller,
     registerCallback = () => {},
     unregisterCallback = () => {}) {
+  if (controller.isRegistered)
+    registerCallback()
   let observer = new MutationObserver(() => {
     if (controller.getMedia()) {
-      controller.registerController()
-      registerCallback()
+      if (!controller.isRegistered) {
+        controller.registerController()
+        registerCallback()
+      }
     } else {
-      controller.unregisterController()
-      unregisterCallback()
+      if (controller.isRegistered) {
+        controller.unregisterController()
+        unregisterCallback()
+      }
     }
   })
   observer.observe(document.body, {
@@ -340,20 +370,23 @@ function autoRegisterController(
     childList: true,
     subtree: true
   })
-  // TODO: use bind
-  window.addEventListener('beforeunload', () => {
-    controller.unregisterController()
-  })
+  window.addEventListener('beforeunload', controller.unregisterController.bind(controller))
   return observer
 }
 
 function autoUpdateStatusController(controller) {
   console.log("auto update status controller")
   let media = controller.getMedia()
-  let observer = new MutationObserver(() => {
-    console.log("video changed")
-    controller.updateStatus()
-  })
+  let updateFunction = controller.updateStatus.bind(controller)
+  let events = ['seeked', 'ended',
+    'ratechange', 'volumechange',
+    'play', 'pause',
+    'durationchange', 'timeupdate'
+  ]
+  for (let event of events) {
+    media.addEventListener(event, updateFunction)
+  }
+  let observer = new MutationObserver(updateFunction)
   observer.observe(media, {
     attributes: true
   })

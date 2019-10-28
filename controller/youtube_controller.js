@@ -1,6 +1,6 @@
 class YoutubeController extends AbstractController {
   constructor() {
-    super('video', {
+    super({
       playPrev: '.ytp-prev-button',
       playNext: '.ytp-next-button',
       like: '#menu > ytd-menu-renderer > #top-level-buttons > ytd-toggle-button-renderer:nth-child(1)',
@@ -13,10 +13,12 @@ class YoutubeController extends AbstractController {
 window.mediaObserver = null
 
 function registeredCallback() {
+  console.log('registered callback')
   window.mediaObserver = autoUpdateStatusController(window.controller)
 }
 
 function unregisteredCallback() {
+  console.log('unregistered callback')
   window.mediaObserver.disconnect()
 }
 
