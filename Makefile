@@ -11,3 +11,6 @@ mpris:
 	sed 's#\$${path}#'"$(pwd)"'#g' mpris.json > mpris-new.json
 	mkdir -p ~/.mozilla/native-messaging-hosts
 	mv mpris-new.json ~/.mozilla/native-messaging-hosts/mpris.json
+
+zip:
+	zip release.zip manifest.json background.js abstract_controller.js controller/*.js popup/* icons/icon128.png icons/fontawesome/css/* icons/fontawesome/webfonts/*
