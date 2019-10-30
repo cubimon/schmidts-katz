@@ -1,7 +1,13 @@
 # Schmidt's Katz
 
 Control your music and videos with Schmidt's Katz's keyboard shortcuts.
-This plugin aims to be feature-complete - you can change volume, seek or even change the playback rate using keystroke commands. To use shortcuts outside Firefox, a native interface integrates this plugin into MPRIS on Linux.
+This plugin aims to be feature-complete - you can change volume, seek or even change the playback rate using keystroke commands.
+To use shortcuts outside Firefox, a native interface integrates this plugin into MPRIS on Linux.
+
+## Build
+
+After clone, run `npm i` and `make prepare`, if it wasn't run automatically by `npm i`.
+To create release zip, run `make zip`.
 
 ## MPRIS
 
@@ -22,8 +28,3 @@ This plugin aims to be feature-complete - you can change volume, seek or even ch
 - disable class depending on for attribute: https://stackoverflow.com/questions/1186416/jquery-selector-for-the-label-of-a-checkbox#1186423
 - Window 10 media overlay
 
-## Build
-
-```bash
-npm i
-```
