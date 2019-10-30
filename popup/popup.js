@@ -114,12 +114,12 @@ function updateStatus(status) {
     $('#volume-slider').disabled = false
     $('#volume-slider').value = volume
     $('#volume-text').classList.remove('disabled')
-    $('#volume-text').innerHTML = `${volume}%`
+    $('#volume-text').innerText = `${volume}%`
   } else {
     $('#volume-icon').classList.add('disabled')
     $('#volume-slider').disabled = true
     $('#volume-text').classList.add('disabled')
-    $('#volume-text').innerHTML = '‒%' 
+    $('#volume-text').innerText = '‒%' 
   }
   $('#play-prev').disabled = !status.canPlayPrev
   let canPlay = 'paused' in status
@@ -134,21 +134,21 @@ function updateStatus(status) {
     $('#play-pause').firstElementChild.classList.add('fa-play')
   }
   $('#forward').disabled = !canSeek
-  $('#play-next').disabled = !status.canPlayPrev
+  $('#play-next').disabled = !status.canPlayNext
   if (canSeek) {
     let labels = timeToText(status.currentTime, status.duration)
-    $('#time-current').innerHTML = labels[0]
+    $('#time-current').innerText = labels[0]
     $('#time-current').classList.remove('disabled')
     $('#time-slider').max = Math.floor(status.duration)
     $('#time-slider').value = Math.floor(status.currentTime)
     $('#time-slider').disabled = false
-    $('#time-duration').innerHTML = labels[1]
+    $('#time-duration').innerText = labels[1]
     $('#time-duration').classList.remove('disabled')
   } else {
-    $('#time-current').innerHTML = '--:--'
+    $('#time-current').innerText = '--:--'
     $('#time-current').classList.add('disabled')
     $('#time-slider').disabled = true
-    $('#time-duration').innerHTML = '--:--'
+    $('#time-duration').innerText = '--:--'
     $('#time-duration').classList.add('disabled')
   }
   $('#like').disabled = !status.canLike

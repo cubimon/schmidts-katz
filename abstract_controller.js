@@ -111,13 +111,13 @@ class AbstractController {
     return false
   }
 
-  playPrev = null
+  playPrev() {}
 
   canPlayNext() {
     return false
   }
 
-  playNext = null
+  playNext() {}
 
   get muted() {
     let media = this.getMedia()
@@ -162,19 +162,23 @@ class AbstractController {
     return false
   }
 
-  like = null
+  like() {}
 
   canDislike() {
     return false
   }
 
-  dislike = null
+  dislike() {}
 
   // return string/title to display
-  title = null
+  title() {
+    return null
+  }
 
   // return location/url to artwork image
-  artwork = null
+  artwork() {
+    return null
+  }
 
   status() {
     let status = {}
@@ -202,15 +206,14 @@ class AbstractController {
       status.playbackRate = this.playbackRate
     status.canLike = this.canLike()
     status.canDislike = this.canDislike()
-    if (this.title != null)
+    if (this.title() != null)
       status.title = this.title()
-    if (this.artwork != null)
+    if (this.artwork() != null)
       status.artwork = this.artwork()
     return status
   }
 
   onMessage(message, sender, sendResponse) {
-    console.log(message)
     let forceUpdate = false
     switch (message.action) {
       case 'play':
@@ -227,11 +230,11 @@ class AbstractController {
         this.currentTime = message.value
         break
       case 'play-prev':
-        if (this.playPrev != null)
+        if (this.canPlayPrev())
           this.playPrev()
         break
       case 'play-next':
-        if (this.playNext != null)
+        if (this.canPlayNext())
           this.playNext()
         break
       case 'toggle-mute':
@@ -244,11 +247,11 @@ class AbstractController {
         this.playbackRate = message.value
         break
       case 'like':
-        if (this.like != null)
+        if (this.canLike())
           this.like()
         break
       case 'dislike':
-        if (this.dislike != null)
+        if (this.canDislike())
           this.dislike()
         break
       case 'request-status':
@@ -375,7 +378,6 @@ function autoRegisterController(
 }
 
 function autoUpdateStatusController(controller) {
-  console.log("auto update status controller")
   let media = controller.getMedia()
   let updateFunction = controller.updateStatus.bind(controller)
   let events = ['seeked', 'ended',
@@ -392,5 +394,3 @@ function autoUpdateStatusController(controller) {
   })
   return observer
 }
-
-console.log('abstract controller')
