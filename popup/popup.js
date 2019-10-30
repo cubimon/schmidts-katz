@@ -172,7 +172,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 })
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log(`popup message: ${JSON.stringify(message)}`)
   switch (message.action) {
     case 'update-status':
       updateStatus(message.status)

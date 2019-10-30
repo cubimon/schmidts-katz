@@ -1,0 +1,7 @@
+{
+    "name": "mpris",
+    "description": "Host for native messaging",
+    "path": "${path}/mpris.js",
+    "type": "stdio",
+    "allowed_extensions": ["schmidts_katz@cubimon.org"]
+}

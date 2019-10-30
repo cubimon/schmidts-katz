@@ -10,6 +10,9 @@ browser.tabs.onActivated.addListener((activeInfo) => {
     updateControllerTabId(activeInfo.tabId)
 })
 
+/**
+ * Minimalistic controller
+ */
 class BackgroundController {
 
   constructor(tabId, status) {
@@ -139,22 +142,49 @@ function processMessage(action, message, tabId) {
     case 'register':
       controllers[tabId] = new BackgroundController(tabId, message.status)
       updateControllerTabId(tabId)
+      if (Object.keys(controllers).length == 1) {
+        // first controller
+        nativePort.postMessage({
+          action: 'register'
+        })
+        nativePort.postMessage({
+          action: 'update-status',
+          status: message.status
+        })
+      }
       return
     case 'unregister':
       delete controllers[tabId]
       removeControllerTabId(tabId)
+      if (getActiveTabId() != null) {
+        browser.tabs.sendMessage(getActiveTabId(), {
+          action: 'request-status'
+        })
+      } else {
+        // all controller closed
+        nativePort.postMessage({
+          action: 'unregister'
+        })
+      }
       return
     case 'update-status':
       // call from controller (website)
       if (controllers[tabId])
         controllers[tabId].setStatus(message.status)
+      if (tabId == getActiveTabId()) {
+        nativePort.postMessage({
+          action: 'update-status',
+          status: message.status
+        })
+      }
       return
     case 'popup opened':
       // from popup
-      if (getActiveTabId() != null)
+      if (getActiveTabId() != null) {
         browser.tabs.sendMessage(getActiveTabId(), {
           action: 'request-status'
         })
+      }
       return
   }
   // no tabId/use latest active controller
@@ -162,6 +192,12 @@ function processMessage(action, message, tabId) {
   if (!controller)
     return
   switch (action) {
+    case 'play':
+      controller.play()
+      break
+    case 'pause':
+      controller.pause()
+      break
     case 'play-pause':
       if (controller.paused)
         controller.play()
@@ -224,11 +260,19 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   let tabId = null
   if ('tab' in sender)
     tabId = sender.tab.id
-  processMessage(message.action, message, tabId)
+  let action = message.action
+  delete message['action']
+  processMessage(action, message, tabId)
 })
 
 // native/mpris
-var port = browser.runtime.connectNative("mpris")
-if (port) {
-  port.onMessage.addListener(this.processMessage.bind(this))
-}
+let nativePort = browser.runtime.connectNative('mpris')
+nativePort.onMessage.addListener((message) => {
+  let action = message.action
+  delete message['action']
+  processMessage(action, message)
+})
+nativePort.onDisconnect.addListener((port) => {
+  if (port.error)
+    console.log(`Disconnected due to an error: ${port.error.message}`);
+})
