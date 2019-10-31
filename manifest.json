@@ -103,6 +103,14 @@
     {
       "matches": ["*://www.youtube.com/*"],
       "js": ["abstract_controller.js", "controller/youtube_controller.js"]
+    },
+    {
+      "matches": ["*://music.youtube.com/*"],
+      "js": ["abstract_controller.js", "controller/youtube_music_controller.js"]
+    },
+    {
+      "matches": ["*://www.twitch.tv/*"],
+      "js": ["abstract_controller.js", "controller/twitch_controller.js"]
     }
   ],
   "permissions": [

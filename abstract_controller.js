@@ -306,6 +306,24 @@ class AbstractController {
   }
 
   /**
+   * 
+   * @param {string} text in format hh:mm:ss
+   * @returns time in seconds
+   */
+  textToTime(text) {
+    if (text == null)
+      return null
+    let numbers = text.split(':').reverse().map((text) => parseInt(text))
+    const factors = [1, 60, 3600]
+    let time = 0
+    for (let i = 0; i < numbers.length; i++) {
+      if (i < factors.length)
+        time += numbers[i] * factors[i]
+    }
+    return time
+  }
+
+  /**
    * register controller in background.js
    */
   registerController() {

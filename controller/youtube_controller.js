@@ -13,16 +13,12 @@ class YoutubeController extends AbstractController {
 window.mediaObserver = null
 
 function registeredCallback() {
-  console.log('registered callback')
   window.mediaObserver = autoUpdateStatusController(window.controller)
 }
 
 function unregisteredCallback() {
-  console.log('unregistered callback')
   window.mediaObserver.disconnect()
 }
 
 window.controller = new YoutubeController()
 autoRegisterController(window.controller, registeredCallback, unregisteredCallback)
-
-console.log('youtube controller')
