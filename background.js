@@ -144,13 +144,17 @@ function processMessage(action, message, tabId) {
       updateControllerTabId(tabId)
       if (Object.keys(controllers).length == 1) {
         // first controller
-        nativePort.postMessage({
-          action: 'register'
+        try {
+          nativePort.postMessage({
+            action: 'register'
+          })
+          nativePort.postMessage({
+            action: 'update-status',
+            status: message.status
         })
-        nativePort.postMessage({
-          action: 'update-status',
-          status: message.status
-        })
+        } catch (e) {
+          console.log(e)
+        }
       }
       return
     case 'unregister':

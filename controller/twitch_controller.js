@@ -5,20 +5,39 @@ class TwitchController extends AbstractController {
     super({
       title: ['h2.tw-font-size-4', '.tw-mg-b-05 > p:nth-child(1) > span:nth-child(1)']
     })
-    this.playPauseSelector = '.player-controls__left-control-group > div:nth-child(1) > button:nth-child(1)'
+    this.playPauseSelector = [
+      '.player-controls__left-control-group > div:nth-child(1) > button:nth-child(1)',
+      '.player-controls__left-control-group > div:nth-child(3) > button:nth-child(1)'
+    ]
   }
 
   play() {
-    super.click(this.playPauseSelector)
+    let media = super.getMedia()
+    if (media && media.paused)
+      super.click(this.playPauseSelector)
   }
 
   pause() {
-    super.click(this.playPauseSelector)
+    let media = super.getMedia()
+    if (media && !media.paused)
+      super.click(this.playPauseSelector)
   }
 
   canSeek() {
     let element = document.querySelector('p.tw-c-text-overlay:nth-child(2)')
     return element != null
+  }
+
+  get currentTime() {
+    return super.currentTime
+  }
+
+  set currentTime(currentTime) {
+    let media = this.getMedia()
+    if (!media)
+      return
+    console.log('seeking')
+    this.execute(`console.log(${currentTime});window.skVideoPlayer.seekTo(${currentTime});`)
   }
 
   get duration() {

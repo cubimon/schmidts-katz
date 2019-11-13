@@ -17,6 +17,25 @@ To create release zip, run `make zip`.
 - next run `make mpris` in the repository, this will create `~/.mozilla/native-messaging-hosts/mpris.json` with a link to `mpris.js` in the cloned repo.
 - to test, you may use the `playerctl` application
 
+## Documentation
+
+### abstract_controller
+
+TODO:
+constructor parameter optional
+
+
+### media_interceptor
+
+overrides `window.createElement` to get access to all created video/audio elements, which are not attached to the DOM.
+These are then attached the DOM in a div with id 'skMedias' for further use in a controller.
+
+### base_code_patcher
+
+adds a `patch` function, which accepts a url pattern, regex to search for code and replacement code.
+This function can be used as last measurement to get access to privately defined functions to access media player functionality.
+
+
 ## TODOs
 
 - Support for other websites than youtube

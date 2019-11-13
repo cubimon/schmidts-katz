@@ -227,7 +227,8 @@ class AbstractController {
         this.currentTime = 0
         break
       case 'current-time':
-        this.currentTime = message.value
+        if (this.canSeek())
+          this.currentTime = message.value
         break
       case 'play-prev':
         if (this.canPlayPrev())
@@ -282,7 +283,16 @@ class AbstractController {
   }
 
   /**
-   * 
+   * @param {string} code javascript code to execute in browser
+   */
+  execute(code) {
+    let script = document.createElement('script')
+    script.textContent = code
+    document.head.append(script)
+    script.remove()
+  }
+
+  /**
    * @param {string} selector element that contains text to get
    * @returns text if found element, null otherwise
    */
@@ -302,6 +312,27 @@ class AbstractController {
     if (!element)
       return false
     element.click()
+    return true
+  }
+
+  /**
+   * expects scrollbar to be horizontal unused at the moment
+   * @param {string} selector element/scrollbar to click on
+   * @param {float} percentage 0 <= percentage <= 1.0, value to click on scrollbar
+   * @returns true if element found, false otherwise
+   */
+  clickScrollbar(selector, percentage) {
+    let seekbar = $(selector)
+    if (!seekbar)
+      return false
+    let rect = seekbar.getBoundingClientRect()
+    let event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+      clientX: rect.x + percentage * rect.width
+    })
+    seekbar.dispatchEvent(event)
     return true
   }
 

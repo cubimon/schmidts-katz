@@ -111,6 +111,11 @@
     {
       "matches": ["*://www.twitch.tv/*"],
       "js": ["abstract_controller.js", "controller/twitch_controller.js"]
+    },
+    {
+      "matches": ["*://www.twitch.tv/videos/*"],
+      "js": ["code_patcher.js", "patches/twitch_patch.js"],
+      "run_at": "document_start"
     }
   ],
   "permissions": [
