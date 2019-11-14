@@ -16,7 +16,7 @@ function getLoadAndPatchCode(element, urlpattern, searchvalue, newvalue) {
           node.removeAttribute('src')
           node.textContent = ''
           let newNode = document.createElement('script')
-          newNode.textContent = \`
+          newNode.textContent = \`(() => {
             let xhttp = new XMLHttpRequest()
             // this must be a function, otherwise >this< doesn't work
             xhttp.onreadystatechange = function() {
@@ -24,6 +24,7 @@ function getLoadAndPatchCode(element, urlpattern, searchvalue, newvalue) {
                 let js = xhttp.responseText
                 js = js.replace('${searchvalue}',
                                 '${newvalue}')
+                js = 'console.log("patched code");' + js + '\\\\r\\\\n//# sourceURL=patched.js'
                 console.log('patching \$\{url\}')
                 let script = document.createElement('script')
                 script.textContent = js
@@ -37,7 +38,8 @@ function getLoadAndPatchCode(element, urlpattern, searchvalue, newvalue) {
             // synchronous
             xhttp.open('GET', '\$\{url\}', false)
             xhttp.send()
-            //# sourceURL=patch.js\`
+          })()
+          //# sourceURL=patch.js\`
           document.head.append(newNode)
         }
       }
@@ -75,6 +77,6 @@ function patch(urlpattern, searchvalue, newvalue) {
   })
   // listen for body changes
   let script = document.createElement('script')
-  script.textContent = getLoadAndPatchCode('document.body', urlpattern, searchvalue, newvalue)
+  script.textContent = getLoadAndPatchCode('document.documentElement', urlpattern, searchvalue, newvalue)
   document.documentElement.append(script)
 }
