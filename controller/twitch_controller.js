@@ -36,8 +36,7 @@ class TwitchController extends AbstractController {
     let media = this.getMedia()
     if (!media)
       return
-    console.log('seeking')
-    this.execute(`console.log(${currentTime});window.skVideoPlayer.seekTo(${currentTime});`)
+    this.execute(`window.skVideoPlayer.seekTo(${currentTime});`)
   }
 
   get duration() {

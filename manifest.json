@@ -116,6 +116,11 @@
       "matches": ["*://www.twitch.tv/videos/*"],
       "js": ["code_patcher.js", "patches/twitch_patch.js"],
       "run_at": "document_start"
+    },
+    {
+      "matches": ["*://soundcloud.com/*"],
+      "js": ["code_patcher.js", "patches/soundcloud_patch.js"],
+      "run_at": "document_start"
     }
   ],
   "permissions": [
