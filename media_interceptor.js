@@ -5,11 +5,7 @@ if (window.skOldCreateElement == undefined) {
   window.skMedias = []
   document.createElement = function(...args) {
     let element = window.skOldCreateElement.apply(document, args)
-    if(args.length > 0 && args[0] == "video") {
-      document.querySelector("#skMedias").append(element)
-      window.skMedias.push(element)
-    }
-    if(args.length > 0 && args[0] == "audio") {
+    if(args.length > 0 && (args[0] == "video" || args[0] == "audio")) {
       document.querySelector("#skMedias").append(element)
       window.skMedias.push(element)
     }

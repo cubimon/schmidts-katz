@@ -397,8 +397,8 @@ class AbstractController {
   }
 }
 
-// find/remove controller automatically
-function autoRegisterController(
+// find/remove controller automatically in dom using mutation observer
+function mutationObserverAutoRegisterController(
     controller,
     registerCallback = () => {},
     unregisterCallback = () => {}) {
@@ -407,7 +407,39 @@ function autoRegisterController(
   let observer = new MutationObserver(() => {
     if (controller.getMedia()) {
       if (!controller.isRegistered) {
+        console.log('controller registered')
         controller.registerController()
+        registerCallback()
+      }
+    } else {
+      if (controller.isRegistered) {
+        console.log('controller unregistered')
+        controller.unregisterController()
+        unregisterCallback()
+      }
+    }
+  })
+  observer.observe(document.documentElement, {
+    attributes: true,
+    childList: true,
+    subtree: true
+  })
+  window.addEventListener('beforeunload', controller.unregisterController.bind(controller))
+  return observer
+}
+
+// find/remove controller automatically in regular time intervals (unused atm)
+function intervalAutoRegisterController(
+    controller,
+    registerCallback = () => {},
+    unregisterCallback = () => {},
+    interval = 1000) {
+  if (controller.isRegistered)
+    registerCallback()
+  setInterval(() => {
+    if (controller.getMedia()) {
+      if (!controller.isRegistered) {
+        controller.unregisterController
         registerCallback()
       }
     } else {
@@ -416,14 +448,7 @@ function autoRegisterController(
         unregisterCallback()
       }
     }
-  })
-  observer.observe(document.body, {
-    attributes: true,
-    childList: true,
-    subtree: true
-  })
-  window.addEventListener('beforeunload', controller.unregisterController.bind(controller))
-  return observer
+  }, interval)
 }
 
 function autoUpdateStatusController(controller) {

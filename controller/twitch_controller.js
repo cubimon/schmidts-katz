@@ -1,5 +1,3 @@
-// TODO: twitch's videos don't like if we modify the video element's currentTime
-// streams work fine though
 class TwitchController extends AbstractController {
   constructor() {
     super({
@@ -33,10 +31,12 @@ class TwitchController extends AbstractController {
   }
 
   set currentTime(currentTime) {
-    let media = this.getMedia()
+    // twitch's videos don't like if we modify the video element's currentTime
+    // streams work fine though
+    let media = super.getMedia()
     if (!media)
       return
-    this.execute(`window.skVideoPlayer.seekTo(${currentTime});`)
+    super.execute(`window.skVideoPlayer.seekTo(${currentTime});`)
   }
 
   get duration() {
@@ -58,4 +58,4 @@ function unregisteredCallback() {
 }
 
 window.controller = new TwitchController()
-autoRegisterController(window.controller, registeredCallback, unregisteredCallback)
+mutationObserverAutoRegisterController(window.controller, registeredCallback, unregisteredCallback)

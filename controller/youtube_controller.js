@@ -21,4 +21,4 @@ function unregisteredCallback() {
 }
 
 window.controller = new YoutubeController()
-autoRegisterController(window.controller, registeredCallback, unregisteredCallback)
+mutationObserverAutoRegisterController(window.controller, registeredCallback, unregisteredCallback)

@@ -3,7 +3,6 @@ function getLoadAndPatchCode(urlpattern, searchvalue, newvalue) {
   return `(() => {
     window.addEventListener('beforescriptexecute', function(e) {
       let url = e.target.src
-      // console.log(\`script: \$\{url\}\`)
       let pattern = ${urlpattern}
       if (!pattern.test(url))
         return

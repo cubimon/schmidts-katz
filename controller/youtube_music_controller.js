@@ -21,4 +21,4 @@ function unregisteredCallback() {
 }
 
 window.controller = new YoutubeMusicController()
-autoRegisterController(window.controller, registeredCallback, unregisteredCallback)
+mutationObserverAutoRegisterController(window.controller, registeredCallback, unregisteredCallback)
