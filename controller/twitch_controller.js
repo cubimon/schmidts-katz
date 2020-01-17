@@ -50,7 +50,7 @@ class TwitchController extends AbstractController {
 window.mediaObserver = null
 
 function registeredCallback() {
-  window.mediaObserver = autoUpdateStatusController(window.controller)
+  window.mediaObserver = autoUpdateStatus(window.controller)
 }
 
 function unregisteredCallback() {
@@ -58,4 +58,4 @@ function unregisteredCallback() {
 }
 
 window.controller = new TwitchController()
-mutationObserverAutoRegisterController(window.controller, registeredCallback, unregisteredCallback)
+mutationObserverAutoRegister(window.controller, registeredCallback, unregisteredCallback)

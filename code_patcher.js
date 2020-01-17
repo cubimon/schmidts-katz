@@ -1,3 +1,4 @@
+// TODO: use web_accessible_resources
 function getLoadAndPatchCode(urlpattern, searchvalue, newvalue) {
   // scope = function
   return `(() => {

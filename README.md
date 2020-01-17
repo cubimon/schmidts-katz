@@ -19,22 +19,29 @@ To create release zip, run `make zip`.
 
 ## Documentation
 
-### abstract_controller
+### files
+
+#### abstract_controller
 
 TODO:
 constructor parameter optional
 
 
-### media_interceptor
+#### media_interceptor
 
 overrides `window.createElement` to get access to all created video/audio elements, which are not attached to the DOM.
 These are then attached the DOM in a div with id 'skMedias' for further use in a controller.
 
-### base_code_patcher
+#### base_code_patcher
 
 adds a `patch` function, which accepts a url pattern, regex to search for code and replacement code.
 This function can be used as last measurement to get access to privately defined functions to access media player functionality.
 
+### permissions
+
+- `webRequest`, `webRequestBlocking` and `urls` to adapt content security policy
+- `activeTab` to find out when user changed tabs
+- `nativeMessaging` for MPRIS
 
 ## TODOs
 

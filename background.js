@@ -280,3 +280,31 @@ nativePort.onDisconnect.addListener((port) => {
   if (port.error)
     console.log(`Disconnected due to an error: ${port.error.message}`);
 })
+
+// CSP
+// var onHeadersReceived = function(details) {
+//   for (var i = 0; i < details.responseHeaders.length; i++) {
+//     if ('content-security-policy' === details.responseHeaders[i].name.toLowerCase()) {
+//       console.log(`csp header: ${details.responseHeaders[i].value}`)
+//       //details.responseHeaders[i].value = ''
+//     }
+//     if ('Feature-Policy' === details.responseHeaders[i].name.toLowerCase()) {
+//       console.log(`feature policy header: ${details.responseHeaders[i].value}`)
+//     }
+//   }
+//   details.responseHeaders.push({
+//     name: 'Feature-Policy',
+//     value: 'autoplay \'*\''
+//   })
+
+//   return {
+//     responseHeaders: details.responseHeaders
+//   };
+// };
+
+// var filter = {
+//   urls: ['*://*/*'],
+//   types: ['main_frame', 'sub_frame']
+// };
+
+// chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, filter, ['blocking', 'responseHeaders']);

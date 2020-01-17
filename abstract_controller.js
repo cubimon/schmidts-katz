@@ -26,32 +26,41 @@ class AbstractController {
         case 'media':
           this.mediaSelector = optionValue
           break
+        case 'currentTime':
+          this.currentTimeSelector = optionValue
+          break
+        case 'duration':
+          this.durationSelector = optionValue
+          break
+        case 'playPause':
+          this.playPauseSelector = optionValue
+          break
         case 'playPrev':
           this.playPrev = this.click.bind(this, optionValue)
           this.canPlayPrev = () => {
             let element = $(optionValue)
-            return element != null && this.isVisible(element)
+            return element && this.isVisible(element)
           }
           break
         case 'playNext':
           this.playNext = this.click.bind(this, optionValue)
           this.canPlayNext = () => {
             let element = $(optionValue)
-            return element != null && this.isVisible(element)
+            return element && this.isVisible(element)
           }
           break
         case 'like':
           this.like = this.click.bind(this, optionValue)
           this.canLike = () => {
             let element = $(optionValue)
-            return element != null && this.isVisible(element)
+            return element && this.isVisible(element)
           }
           break
         case 'dislike':
           this.dislike = this.click.bind(this, optionValue)
           this.canDislike = () => {
             let element = $(optionValue)
-            return element != null && this.isVisible(element)
+            return element && this.isVisible(element)
           }
           break
         case 'title':
@@ -65,12 +74,24 @@ class AbstractController {
   }
 
   play() {
+    // prefer selector if specified
+    if (this.playPauseSelector) {
+      if (this.click(this.playPauseSelector))
+        return
+    }
+    // default to media's play/pause
     let media = this.getMedia()
     if (media)
       media.play()
   }
 
   pause() {
+    // prefer selector if specified
+    if (this.playPauseSelector) {
+      if (this.click(this.playPauseSelector))
+        return
+    }
+    // default to media's play/pause
     let media = this.getMedia()
     if (media)
       media.pause()
@@ -80,7 +101,6 @@ class AbstractController {
     let media = this.getMedia()
     if (media)
       return media.paused
-    return null
   }
 
   canSeek() {
@@ -91,7 +111,7 @@ class AbstractController {
     let media = this.getMedia()
     if (media)
       return media.currentTime
-    return null
+    return
   }
 
   set currentTime(currentTime) {
@@ -104,7 +124,7 @@ class AbstractController {
     let media = this.getMedia()
     if (media)
       return media.duration
-    return null
+    return
   }
 
   canPlayPrev() {
@@ -123,7 +143,6 @@ class AbstractController {
     let media = this.getMedia()
     if (media)
       return media.muted
-    return null
   }
 
   set muted(muted) {
@@ -136,7 +155,6 @@ class AbstractController {
     let media = this.getMedia()
     if (media)
       return media.volume
-    return null
   }
 
   set volume(volume) {
@@ -149,7 +167,6 @@ class AbstractController {
     let media = this.getMedia()
     if (media)
       return media.playbackRate
-    return null
   }
 
   set playbackRate(playbackRate) {
@@ -171,34 +188,30 @@ class AbstractController {
   dislike() {}
 
   // return string/title to display
-  title() {
-    return null
-  }
+  title() {}
 
   // return location/url to artwork image
-  artwork() {
-    return null
-  }
+  artwork() {}
 
   status() {
     let status = {}
     if (this.paused != null)
       status.paused = this.paused
     if (this.canSeek()
-        && this.currentTime != null
+        && this.currentTime
         && typeof(this.currentTime) == 'number'
         && !isNaN(this.currentTime))
       status.currentTime = this.currentTime
     if (this.canSeek()
-        && this.duration != null
+        && this.duration
         && typeof(this.duration) == 'number'
         && !isNaN(this.duration))
       status.duration = this.duration
     status.canPlayPrev = this.canPlayPrev()
     status.canPlayNext = this.canPlayNext()
-    if (this.muted)
+    if (this.muted != null)
       status.muted = this.muted
-    if (this.volume != null
+    if (this.volume
         && typeof(this.volume) == 'number'
         && !isNaN(this.volume))
       status.volume = this.volume
@@ -206,10 +219,11 @@ class AbstractController {
       status.playbackRate = this.playbackRate
     status.canLike = this.canLike()
     status.canDislike = this.canDislike()
-    if (this.title() != null)
+    if (this.title())
       status.title = this.title()
-    if (this.artwork() != null)
+    if (this.artwork())
       status.artwork = this.artwork()
+    console.log(status)
     return status
   }
 
@@ -266,20 +280,27 @@ class AbstractController {
    * returns media (audio/video element)
    */
   getMedia() {
-    let media = $(this.mediaSelector)
-    if (media == null)
-      return null
-    if (!this.isVisible(media))
-      return null
-    return media
+    return $(this.mediaSelector)
   }
 
   /**
-   * @param {DOMElement} element to check if visible
-   * @returns true if visible, false otherwise
+   * @returns true if video/audio can be controlled, false otherwise
    */
-  isVisible(element) {
-    return element.offsetParent !== null
+  isAvailable() {
+    let media = this.getMedia()
+    if (media) {
+      // audio doesn't have to be visible
+      if (media.tagName == "AUDIO")
+        return true
+      // true if video is visible
+      // e.g. youtube hides the video elemen between menus
+      if (this.isVisible(media))
+        return true
+    }
+    // media element may be created on play lazily (e.g. spotify)
+    if ($(this.playPauseSelector))
+      return true
+    return false
   }
 
   /**
@@ -294,12 +315,12 @@ class AbstractController {
 
   /**
    * @param {string} selector element that contains text to get
-   * @returns text if found element, null otherwise
+   * @returns text if found element, undefined otherwise
    */
   text(selector) {
     let element = $(selector)
     if (!element)
-      return null
+      return
     return element.innerText
   }
 
@@ -337,13 +358,12 @@ class AbstractController {
   }
 
   /**
-   * 
    * @param {string} text in format hh:mm:ss
-   * @returns time in seconds
+   * @returns time in seconds or undefined
    */
   textToTime(text) {
-    if (text == null)
-      return null
+    if (!text)
+      return
     let numbers = text.split(':').reverse().map((text) => parseInt(text))
     const factors = [1, 60, 3600]
     let time = 0
@@ -352,6 +372,14 @@ class AbstractController {
         time += numbers[i] * factors[i]
     }
     return time
+  }
+
+  /**
+   * @returns true if element is visible somewhere on the webpage,
+   *          false otherwise
+   */
+  isVisible(element) {
+    return !!(element && element.offsetParent)
   }
 
   /**
@@ -397,15 +425,16 @@ class AbstractController {
   }
 }
 
-// find/remove controller automatically in dom using mutation observer
-function mutationObserverAutoRegisterController(
+// register/unregister controller automatically in dom using mutation observer
+// media may not exist in registerCallback
+function mutationObserverAutoRegister(
     controller,
     registerCallback = () => {},
     unregisterCallback = () => {}) {
   if (controller.isRegistered)
     registerCallback()
   let observer = new MutationObserver(() => {
-    if (controller.getMedia()) {
+    if (controller.isAvailable()) {
       if (!controller.isRegistered) {
         console.log('controller registered')
         controller.registerController()
@@ -428,8 +457,9 @@ function mutationObserverAutoRegisterController(
   return observer
 }
 
-// find/remove controller automatically in regular time intervals (unused atm)
-function intervalAutoRegisterController(
+// register/unregister controller automatically in regular time intervals
+// most abstract solution, unused atm
+function intervalAutoRegister(
     controller,
     registerCallback = () => {},
     unregisterCallback = () => {},
@@ -451,8 +481,31 @@ function intervalAutoRegisterController(
   }, interval)
 }
 
-function autoUpdateStatusController(controller) {
+// find when media object changes of a controller
+function onMediaChanged(controller, callback) {
+  let prevMedia = null
+  let observer = new MutationObserver(() => {
+    let media = controller.getMedia()
+    if (media != prevMedia) {
+      prevMedia = media
+      callback(controller, media)
+    }
+  })
+  observer.observe(document.documentElement, {
+    attributes: true,
+    childList: true,
+    subtree: true
+  })
+  window.addEventListener(
+    'beforeunload', callback.bind(controller, controller, null))
+  return observer
+}
+
+// listen for media attribute changes and publish status to mpris/popup
+function autoUpdateStatus(controller) {
   let media = controller.getMedia()
+  if (!media)
+    return
   let updateFunction = controller.updateStatus.bind(controller)
   let events = ['seeked', 'ended',
     'ratechange', 'volumechange',

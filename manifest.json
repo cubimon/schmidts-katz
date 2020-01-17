@@ -115,13 +115,6 @@
       ]
     },
     {
-      "matches": ["*://www.twitch.tv/*"],
-      "js": [
-        "abstract_controller.js",
-        "controller/twitch_controller.js"
-      ]
-    },
-    {
       "matches": ["*://www.twitch.tv/videos/*"],
       "js": [
         "code_patcher.js",
@@ -130,11 +123,18 @@
       "run_at": "document_start"
     },
     {
+      "matches": ["*://www.twitch.tv/*"],
+      "js": [
+        "abstract_controller.js",
+        "controller/twitch_controller.js"
+      ]
+    },
+    {
       "matches": ["*://soundcloud.com/*"],
       "js": [
         "code_patcher.js",
         "patches/soundcloud_patch.js",
-        "media_interceptor.js"
+        "media_interceptor_injector.js"
       ],
       "run_at": "document_start"
     },
@@ -144,10 +144,30 @@
         "abstract_controller.js",
         "controller/soundcloud_controller.js"
       ]
+    },
+    {
+      "matches": ["*://open.spotify.com/album/*"],
+      "js": [
+        "media_interceptor_injector.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["*://open.spotify.com/album/*"],
+      "js": [
+        "abstract_controller.js",
+        "controller/spotify_controller.js"
+      ]
     }
   ],
   "permissions": [
+    "webRequest",
+    "webRequestBlocking",
     "activeTab",
-    "nativeMessaging"
+    "nativeMessaging",
+    "https://open.spotify.com/*"
+  ],
+  "web_accessible_resources": [
+    "media_interceptor.js"
   ]
 }

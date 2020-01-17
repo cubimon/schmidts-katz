@@ -10,15 +10,15 @@ class YoutubeController extends AbstractController {
   }
 }
 
-window.mediaObserver = null
-
 function registeredCallback() {
-  window.mediaObserver = autoUpdateStatusController(window.controller)
+  window.mediaObserver = autoUpdateStatus(window.controller)
 }
 
 function unregisteredCallback() {
   window.mediaObserver.disconnect()
 }
 
+window.mediaObserver = null
 window.controller = new YoutubeController()
-mutationObserverAutoRegisterController(window.controller, registeredCallback, unregisteredCallback)
+mutationObserverAutoRegister(
+    window.controller, registeredCallback, unregisteredCallback)

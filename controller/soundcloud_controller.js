@@ -1,21 +1,12 @@
 class SoundCloudController extends AbstractController {
   constructor() {
     super({
+      media: '#skMedias > audio:nth-child(2)',
       title: ['span.soundTitle__title > span:nth-child(1)']
     })
     this.playPauseSelector = [
       '.playControl'
     ]
-  }
-
-  getMedia() {
-    let skMedias = document.getElementById('skMedias')
-    if (skMedias == null || !'children' in skMedias)
-      return null
-    skMedias = skMedias.children
-    if (skMedias.length < 2)
-      return null
-    return skMedias[1]
   }
 
   play() {
@@ -42,7 +33,8 @@ class SoundCloudController extends AbstractController {
   }
 
   get duration() {
-    let element = document.querySelector('.playbackTimeline__duration > span:nth-child(2)')
+    let element = document.querySelector(
+        '.playbackTimeline__duration > span:nth-child(2)')
     if (element == null)
       return null
     return super.textToTime(element.innerText)
@@ -52,7 +44,7 @@ class SoundCloudController extends AbstractController {
 window.mediaObserver = null
 
 function registeredCallback() {
-  window.mediaObserver = autoUpdateStatusController(window.controller)
+  window.mediaObserver = autoUpdateStatus(window.controller)
 }
 
 function unregisteredCallback() {
@@ -60,4 +52,7 @@ function unregisteredCallback() {
 }
 
 window.controller = new SoundCloudController()
-mutationObserverAutoRegisterController(window.controller, registeredCallback, unregisteredCallback)
+mutationObserverAutoRegister(
+    window.controller,
+    registeredCallback,
+    unregisteredCallback)
