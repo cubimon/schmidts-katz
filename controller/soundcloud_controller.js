@@ -1,24 +1,11 @@
 class SoundCloudController extends AbstractController {
   constructor() {
     super({
+      playPrev: 'button.skipControl:nth-child(1)',
+      playNext: 'button.skipControl:nth-child(3)',
       media: '#skMedias > audio:nth-child(2)',
-      title: ['span.soundTitle__title > span:nth-child(1)']
+      title: ['.playbackSoundBadge__titleLink > span:nth-child(2)']
     })
-    this.playPauseSelector = [
-      '.playControl'
-    ]
-  }
-
-  play() {
-    let media = this.getMedia()
-    if (media && media.paused)
-      super.click(this.playPauseSelector)
-  }
-
-  pause() {
-    let media = this.getMedia()
-    if (media && !media.paused)
-      super.click(this.playPauseSelector)
   }
 
   get currentTime() {

@@ -223,7 +223,6 @@ class AbstractController {
       status.title = this.title()
     if (this.artwork())
       status.artwork = this.artwork()
-    console.log(status)
     return status
   }
 
