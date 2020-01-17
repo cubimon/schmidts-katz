@@ -1,35 +1,28 @@
 class SpotifyCloudController extends AbstractController {
   constructor() {
     super({
-      playPrev: '.Root__now-playing-bar > footer:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > button:nth-child(1)',
-      playNext: '.Root__now-playing-bar > footer:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > button:nth-child(1)',
+      playPrev: '.Root__now-playing-bar > footer:nth-child(1) >' +
+                'div:nth-child(1) > div:nth-child(2) >' +
+                'div:nth-child(1) > div:nth-child(1) >' +
+                'div:nth-child(2) > button:nth-child(1)',
+      playNext: '.Root__now-playing-bar > footer:nth-child(1) >' +
+                'div:nth-child(1) > div:nth-child(2) >' +
+                'div:nth-child(1) > div:nth-child(1) >' +
+                'div:nth-child(4) > button:nth-child(1)',
       media: '#skMedias > audio:nth-child(1)',
-      title: ['.TrackListHeader__entity-name > h2:nth-child(1) > span:nth-child(1)']
+      title: ['.TrackListHeader__entity-name > h2:nth-child(1) >' +
+              'span:nth-child(1)']
     })
-    this.playPauseSelector = [
-      '.Root__now-playing-bar > footer:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)'
-    ]
-  }
-
-  play() {
-    super.click(this.playPauseSelector)
-  }
-
-  pause() {
-    super.click(this.playPauseSelector)
   }
 }
 
 window.mediaObserver = null
 
 function registeredCallback() {
-  console.log('register callback')
   window.controller.play()
-  //window.controller.pause()
 }
 
-function mediaChanged(controller, media) {
-  console.log('media changed')
+function mediaChanged(_controller, media) {
   if (window.mediaObserver != null)
     window.mediaObserver.disconnect()
   if (media != null)
