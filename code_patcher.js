@@ -1,4 +1,4 @@
-// TODO: use web_accessible_resources
+// TODO: use web_accessible_resources/how do we pass urlpattern/searchvalue/newvalue?
 function getLoadAndPatchCode(urlpattern, searchvalue, newvalue) {
   // scope = function
   return `(() => {

@@ -15,4 +15,5 @@ mpris:
 	mv mpris-new.json ~/.mozilla/native-messaging-hosts/mpris.json
 
 zip:
-	zip release.zip manifest.json background.js abstract_controller.js controller/*.js popup/* icons/icon128.png icons/fontawesome/css/* icons/fontawesome/webfonts/*
+	zip release.zip manifest.json *.js controller/*.js patches/*.js popup/* icons/icon128.png icons/fontawesome/css/* icons/fontawesome/webfonts/*
+
