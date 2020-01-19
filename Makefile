@@ -1,16 +1,17 @@
-fontawesome_path := node_modules/@fortawesome/fontawesome-free
-target_location := icons/fontawesome
+fontawesome_npm_path := node_modules/@fortawesome/fontawesome-free
+fontawesome_target_path := icons/fontawesome
+native_script_path := $(shell pwd)
 
 prepare:
-	mkdir -p $(target_location)/css/
-	mkdir -p $(target_location)/webfonts/
-	cp $(fontawesome_path)/css/all.min.css             $(target_location)/css/
-	cp $(fontawesome_path)/webfonts/fa-solid-900.ttf   $(target_location)/webfonts/
-	cp $(fontawesome_path)/webfonts/fa-solid-900.woff2 $(target_location)/webfonts/
-	cp $(fontawesome_path)/webfonts/fa-solid-900.woff  $(target_location)/webfonts/
+	mkdir -p $(fontawesome_target_path)/css/
+	mkdir -p $(fontawesome_target_path)/webfonts/
+	cp $(fontawesome_npm_path)/css/all.min.css             $(fontawesome_target_path)/css/
+	cp $(fontawesome_npm_path)/webfonts/fa-solid-900.ttf   $(fontawesome_target_path)/webfonts/
+	cp $(fontawesome_npm_path)/webfonts/fa-solid-900.woff2 $(fontawesome_target_path)/webfonts/
+	cp $(fontawesome_npm_path)/webfonts/fa-solid-900.woff  $(fontawesome_target_path)/webfonts/
 
 mpris:
-	sed 's#\$${path}#'"$(pwd)"'#g' mpris.json > mpris-new.json
+	sed 's#\$${path}#'"${native_script_path}"'#g' mpris.json > mpris-new.json
 	mkdir -p ~/.mozilla/native-messaging-hosts
 	mv mpris-new.json ~/.mozilla/native-messaging-hosts/mpris.json
 
