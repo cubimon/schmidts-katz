@@ -4,7 +4,7 @@
   --disabled-color: gray;
 }
 body {
-  width: 18em;
+  width: 100%;
   margin: 0;
   background-color: var(--background-color);
 }
@@ -15,9 +15,9 @@ span {
   align-content: space-around;
 }
 button {
-  width: 100%;
   background: transparent;
   border: none;
+  flex-grow: 1;
 }
 i {
   margin: 0.2em;
