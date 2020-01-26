@@ -102,21 +102,21 @@ function updateStatus(status) {
     $('#title').classList.add('disabled')
   }
   if (status.muted) {
-    $('#volume-icon').classList.remove('fa-volume-up')
-    $('#volume-icon').classList.add('fa-volume-mute')
+    $('#volume-icon').firstElementChild.classList.remove('fa-volume-up')
+    $('#volume-icon').firstElementChild.classList.add('fa-volume-mute')
   } else {
-    $('#volume-icon').classList.remove('fa-volume-mute')
-    $('#volume-icon').classList.add('fa-volume-up')
+    $('#volume-icon').firstElementChild.classList.remove('fa-volume-mute')
+    $('#volume-icon').firstElementChild.classList.add('fa-volume-up')
   }
   if ('volume' in status) {
     let volume = Math.round(status.volume * 100)
-    $('#volume-icon').classList.remove('disabled')
+    $('#volume-icon').disabled = false
     $('#volume-slider').disabled = false
     $('#volume-slider').value = volume
     $('#volume-text').classList.remove('disabled')
     $('#volume-text').innerText = `${volume}%`
   } else {
-    $('#volume-icon').classList.add('disabled')
+    $('#volume-icon').disabled = true
     $('#volume-slider').disabled = true
     $('#volume-text').classList.add('disabled')
     $('#volume-text').innerText = '‒%' 

@@ -11,91 +11,56 @@
     "default_title": "Schmidt's Katz",
     "default_popup": "popup/popup.html"
   },
-  "applications": {
-    "gecko": {
-      "id": "schmidts_katz@cubimon.org"
-    }
-  },
   "background": {
     "scripts": ["background.js"]
   },
   "commands": {
     "play-pause": {
       "suggested_key": {
-        "default": "Ctrl+Alt+D"
+        "default": "Alt+K"
       },
       "description": "Toggle play/pause"
     },
     "stop": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+C"
-      },
       "description": "Stop all players"
     },
     "backward": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+S"
-      },
       "description": "Seek backwards"
     },
     "forward": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+F"
-      },
       "description": "Seek forward"
     },
     "play-prev": {
       "suggested_key": {
-        "default": "Ctrl+Alt+A"
+        "default": "Alt+J"
       },
       "description": "Play previous track"
     },
     "play-next": {
       "suggested_key": {
-        "default": "Ctrl+Alt+G"
+        "default": "Alt+L"
       },
       "description": "Play next track"
     },
     "toggle-mute": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+E"
-      },
       "description": "Toggle mute"
     },
     "volume-down": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+W"
-      },
       "description": "Decrease volume"
     },
     "volume-up": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+R"
-      },
       "description": "Increase volume"
     },
     "playback-rate-decrease": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+Y"
-      },
       "description": "Decrease playback speed"
     },
     "playback-rate-increase": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+B"
-      },
       "description": "Increases playback speed"
     },
     "like": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+V"
-      },
       "description": "Toggle like"
     },
     "dislike": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+X"
-      },
       "description": "Toggle dislike"
     }
   },

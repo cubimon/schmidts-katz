@@ -211,7 +211,7 @@ class AbstractController {
     status.canPlayNext = this.canPlayNext()
     if (this.muted != null)
       status.muted = this.muted
-    if (this.volume
+    if (this.volume != null
         && typeof(this.volume) == 'number'
         && !isNaN(this.volume))
       status.volume = this.volume

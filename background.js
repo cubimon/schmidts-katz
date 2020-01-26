@@ -270,7 +270,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 // native/mpris
-let nativePort = browser.runtime.connectNative('mpris')
+let nativePort = browser.runtime.connectNative('schmidts_katz_mpris')
 nativePort.onMessage.addListener((message) => {
   let action = message.action
   delete message['action']
@@ -307,4 +307,4 @@ nativePort.onDisconnect.addListener((port) => {
 //   types: ['main_frame', 'sub_frame']
 // };
 
-// chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, filter, ['blocking', 'responseHeaders']);
+// browser.webRequest.onHeadersReceived.addListener(onHeadersReceived, filter, ['blocking', 'responseHeaders']);

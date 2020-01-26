@@ -14,7 +14,7 @@ To create release zip, run `make zip`.
 - make sure you have `node` and `npm` installed
 - clone this repo
 - run `npm i` in the repository
-- next run `make mpris` in the repository, this will create `~/.mozilla/native-messaging-hosts/mpris.json` with a link to `mpris.js` in the cloned repo.
+- next run `make mpris-firefox` in the repository, this will create `~/.mozilla/native-messaging-hosts/mpris.json` with a link to `mpris.js` in the cloned repo.
 - to test, you may use the `playerctl` application
 
 ## Documentation
