@@ -12,10 +12,10 @@ prepare:
 	cp $(fontawesome_npm_path)/webfonts/fa-solid-900.woff2 $(fontawesome_target_path)/webfonts/
 	cp $(fontawesome_npm_path)/webfonts/fa-solid-900.woff  $(fontawesome_target_path)/webfonts/
 
-firefox:
+patch_firefox:
 	find -name '*.js' -not -path "./node_modules/*" -exec sed -i 's/chrome\./browser./g' {} \;
 
-chrome:
+patch_chrome:
 	find -name '*.js' -not -path "./node_modules/*" -exec sed -i 's/browser\./chrome./g' {} \;
 
 mpris-firefox:
@@ -37,4 +37,3 @@ mpris-chrome:
 
 zip:
 	zip release.zip manifest.json *.js controller/*.js patches/*.js popup/* icons/icon128.png icons/fontawesome/css/* icons/fontawesome/webfonts/*
-
