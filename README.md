@@ -1,23 +1,22 @@
 # Schmidt's Katz
 
 Control your music and videos with Schmidt's Katz's keyboard shortcuts.
-This plugin aims to be feature-complete - you can change volume, seek or even change the playback rate using keystroke commands.
+This plugin aims to be feature-complete - you can change volume, seek or even modify the playback rate using keystroke commands.
 To use shortcuts outside Firefox, a native interface integrates this plugin into MPRIS on Linux.
 
 ## Build
 
-After clone, run `npm i` and `make prepare`, if it wasn't run automatically by `npm i`.
-To create release zip, run `make zip`.
+After clone, run `yarn` and `yarn firefox` to create a zip and install mpris native manifest file on linux.
+For chromium run `yarn chromium`, for google chrome run `yarn google-chrome`.
 
 ## MPRIS
 
-- make sure you have `node` and `npm` installed
-- clone this repo
-- run `npm i` in the repository
-- next run `make mpris-firefox` in the repository, this will create `~/.mozilla/native-messaging-hosts/mpris.json` with a link to `mpris.js` in the cloned repo.
-- to test, you may use the `playerctl` application
+`yarn firefox` installs mpris manifest file.
 
 ## Documentation
+
+This plugin tries to use as many features of the standard html5 audio/video api.
+Unluckily most websites build their own implementations around the html5 standard, so we try to get around issues in the most general way.
 
 ### files
 
@@ -45,8 +44,8 @@ This function can be used as last measurement to get access to privately defined
 
 ## TODOs
 
-- Support for other websites than youtube
-- test playback rate/artwork
+- Support for more websites
+- CI/test playback rate/artwork
 - Popup
   - scroll title
   - grid layout
