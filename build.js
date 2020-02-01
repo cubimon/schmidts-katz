@@ -11,7 +11,7 @@ const nativeScriptPath = process.cwd()
 const mkdirOptions = {
   recursive: true
 }
-// glob source without deps/build files/mpris
+// glob source w.o. deps/build files/mpris
 const globOptions = {
   ignore: [
     'node_modules/**',
@@ -20,12 +20,7 @@ const globOptions = {
   ]
 }
 
-
-if (process.argv.length < 3) {
-  console.log('must pass one parameter/target')
-  return -1
-}
-
+// some helper functions to replace string in file(s)
 function replaceInFile(file, replacements) {
   fs.readFile(file, (error, data) => {
     if (error) throw error
@@ -48,7 +43,7 @@ function replaceInFiles(pattern, replacements) {
   })
 }
 
-function prepare() {
+function prepare(browser) {
   const fontawesomeNpmPath = 'node_modules/@fortawesome/fontawesome-free'
   const fontawesomeTargetPath = 'icons/fontawesome'
   fs.mkdirSync(fontawesomeTargetPath + '/css/', mkdirOptions)
@@ -61,43 +56,48 @@ function prepare() {
           `${fontawesomeTargetPath}/webfonts/fa-solid-900.woff2`)
   fs.copyFileSync(`${fontawesomeNpmPath}/webfonts/fa-solid-900.woff`,
           `${fontawesomeTargetPath}/webfonts/fa-solid-900.woff`)
+  switch(browser) {
+    case 'firefox':
+      replaceInFiles('**/*.js', [
+        [/chrome\./g, 'browser.']
+      ])
+      break
+    case 'chromium':
+    case 'google-chrome':
+      replaceInFiles('**/*.js', [
+        [/browser\./g, 'chrome.']
+      ])
+      break
+  }
 }
 
-function prepareFirefox() {
-  replaceInFiles('**/*.js', [
-    [/chrome\./g, 'browser.']
-  ])
-}
-
-function prepareChrome() {
-  replaceInFiles('**/*.js', [
-    [/browser\./g, 'chrome.']
-  ])
-}
-
-function mprisFirefox() {
-  const mprisManifestPath = homedir + '/.mozilla/native-messaging-hosts'
+function mpris(browser) {
+  let mprisManifestPath = null
+  let changes = []
+  switch(browser) {
+    case 'firefox':
+      mprisManifestPath = homedir + '/.mozilla/native-messaging-hosts'
+      changes = [
+        [/\$\{path\}/g, nativeScriptPath],
+        [/\$\{allowed_extension\}/g, 'schmidts_katz@cubimon.org'],
+        [/allowed_origins/g, 'allowed_extensions']
+      ]
+      break
+    case 'chromium':
+    case 'google-chrome':
+      mprisManifestPath = homedir + '/.config/chromium/NativeMessagingHosts'
+      changes = [
+        [/\$\{path\}/g, nativeScriptPath],
+        [/\$\{allowed_extension\}/g,
+          'chrome-extension://afjbcphlhomgmdfnhondkjglafgbejdm/'],
+        [/allowed_extensions/g, 'allowed_origins']
+      ]
+      break
+  }
   let targetFile = `${mprisManifestPath}/schmidts_katz_mpris.json`
   fs.mkdirSync(mprisManifestPath, mkdirOptions)
   fs.copyFileSync(`mpris.json`, targetFile)
-  replaceInFile(targetFile, [
-    [/\$\{path\}/g, nativeScriptPath],
-    [/\$\{allowed_extension\}/g, 'schmidts_katz@cubimon.org'],
-    [/allowed_origins/g, 'allowed_extensions']
-  ])
-}
-
-function mprisChrome() {
-  const mprisManifestPath = homedir + '/.config/chromium/NativeMessagingHosts'
-  let targetFile = `${mprisManifestPath}/schmidts_katz_mpris.json`
-  fs.mkdirSync(mprisManifestPath, mkdirOptions)
-  fs.copyFileSync(`mpris.json`, targetFile)
-  replaceInFile(targetFile, [
-    [/\$\{path\}/g, nativeScriptPath],
-    [/\$\{allowed_extension\}/g,
-      'chrome-extension://afjbcphlhomgmdfnhondkjglafgbejdm/'],
-    [/allowed_extensions/g, 'allowed_origins']
-  ])
+  replaceInFile(targetFile, changes)
 }
 
 function zip() {
@@ -119,17 +119,25 @@ function zip() {
   archive.finalize()
 }
 
-let targets = [
-  prepare,
-  prepareFirefox,
-  prepareChrome,
-  mprisFirefox,
-  mprisChrome,
-  zip
-]
 
-for (let target of targets) {
-  if (target.name == process.argv[2]) {
-    target()
-  }
+// argument parsing
+let supportedBrowsers = [
+  'firefox',
+  'chromium',
+  'google-chrome'
+]
+const description = `first argument must be browser: ${supportedBrowsers}`
+if (process.argv.length < 3) {
+  console.log(description)
+  return 1
 }
+let browser = process.argv[2]
+if (!supportedBrowsers.includes(browser)) {
+  console.log(description)
+  return 2
+}
+prepare(browser)
+if (process.platform === 'linux')
+  mpris(browser)
+zip()
+

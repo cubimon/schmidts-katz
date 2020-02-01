@@ -3,7 +3,9 @@
   "version": "1.1.0",
   "description": "Universl media shortcut key",
   "scripts": {
-    "prepare": "make prepare"
+    "firefox": "node build.js firefox",
+    "chromium": "node build.js chromium",
+    "google-chrome": "node build.js google-chrome"
   },
   "keywords": [
     "commands",
