@@ -3,6 +3,7 @@
 const fs = require('fs')
 const glob = require('glob')
 const archiver = require('archiver')
+const ChromiumExtension = require('crx')
 
 const homedir = require('os').homedir()
 // location where mpris.js is located
@@ -71,6 +72,48 @@ function prepare(browser) {
   }
 }
 
+function build(browser) {
+  filename = 'release'
+  let patterns = [
+      '**/*.js',
+      'manifest.json',
+      'icons/icon128.png',
+      'icons/fontawesome/css/*',
+      'icons/fontawesome/webfonts/*'
+  ]
+  let files = []
+  for (let pattern of patterns) {
+    files = files.concat(glob.sync(pattern, globOptions))
+  }
+  switch(browser) {
+    case 'firefox':
+      let buildStream = fs.createWriteStream(`${filename}.xpi`)
+      let archive = archiver('zip')
+      for (let file of files) {
+        archive.file(file)
+      }
+      archive.pipe(buildStream)
+      archive.finalize()
+      break
+    case 'chromium':
+    case 'google-chrome':
+      const crx = new ChromiumExtension({
+        privateKey: fs.readFileSync('./key.pem')
+      })
+      crx.load(files)
+        .then(crx => crx.pack())
+        .then(crxBuffer => {
+          fs.writeFile(`${filename}.crx`, crxBuffer, (error) => {
+            if (error) throw error
+          })
+        })
+        .catch(error => {
+          if (error) throw error
+        })
+      break
+  }
+}
+
 function mpris(browser) {
   let mprisManifestPath = null
   let changes = []
@@ -100,25 +143,6 @@ function mpris(browser) {
   replaceInFile(targetFile, changes)
 }
 
-function zip() {
-  let buildStream = fs.createWriteStream('release.zip')
-  let archive = archiver('zip')
-  archive.pipe(buildStream)
-  let patterns = [
-      '**/*.js',
-      'manifest.json',
-      'icons/icon128.png',
-      'icons/fontawesome/css/*',
-      'icons/fontawesome/webfonts/*'
-  ]
-  for (let pattern of patterns) {
-      for (file of glob.sync(pattern, globOptions)) {
-        archive.file(file)
-      }
-  }
-  archive.finalize()
-}
-
 
 // argument parsing
 let supportedBrowsers = [
@@ -137,7 +161,6 @@ if (!supportedBrowsers.includes(browser)) {
   return 2
 }
 prepare(browser)
+build(browser)
 if (process.platform === 'linux')
   mpris(browser)
-zip()
-

@@ -9,6 +9,10 @@ To use shortcuts outside Firefox, a native interface integrates this plugin into
 After clone, run `yarn` and `yarn firefox` to create a zip and install mpris native manifest file on linux.
 For chromium run `yarn chromium`, for google chrome run `yarn google-chrome`.
 
+### Chromium certificate
+
+`openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes`
+
 ## MPRIS
 
 `yarn firefox` installs mpris manifest file.
