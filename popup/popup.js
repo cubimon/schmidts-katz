@@ -1,4 +1,5 @@
 let $ = document.querySelector.bind(document)
+if (window.chrome) window.browser = window.chrome
 
 function toggleMute() {
   browser.runtime.sendMessage({
@@ -80,7 +81,8 @@ function timeToText(currentTime, duration) {
   let durationHour = Math.floor(duration % 60).toString()
 
   // current time hour should be same width as duration time hour
-  currentTimeHour = currentTimeHour.toString().padStart(durationHour.length, "0")
+  currentTimeHour = currentTimeHour.toString()
+    .padStart(durationHour.length, "0")
 
   let currentTimeLabel = `${currentTimeMin}:${currentTimeSec}`
   let durationLabel = `${durationMin}:${durationSec}`

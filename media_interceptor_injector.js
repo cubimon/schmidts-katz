@@ -1,3 +1,4 @@
+if (window.chrome) window.browser = window.chrome
 let initialized = false
 let callback = () => {
   if (document.head && !initialized) {

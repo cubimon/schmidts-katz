@@ -1,11 +1,13 @@
+if (window.chrome) window.browser = window.chrome
+
 // called if user closes tab
-browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
+browser.tabs.onRemoved.addListener((tabId, _removeInfo) => {
   delete controllers[tabId]
   removeControllerTabId(tabId)
 })
 
 // called if user switches tab
-browser.tabs.onActivated.addListener((activeInfo) => {
+browser.tabs.onActivated.addListener(activeInfo => {
   if (activeInfo.tabId in controllerStack)
     updateControllerTabId(activeInfo.tabId)
 })
@@ -140,6 +142,7 @@ function processMessage(action, message, tabId) {
   // messages from website/popup
   switch (action) {
     case 'register':
+      console.log('register controller')
       controllers[tabId] = new BackgroundController(tabId, message.status)
       updateControllerTabId(tabId)
       if (Object.keys(controllers).length == 1) {
@@ -158,6 +161,7 @@ function processMessage(action, message, tabId) {
       }
       return
     case 'unregister':
+      console.log('unregister controller')
       delete controllers[tabId]
       removeControllerTabId(tabId)
       if (getActiveTabId() != null) {
@@ -260,7 +264,7 @@ function processMessage(action, message, tabId) {
 browser.commands.onCommand.addListener(this.processMessage.bind(this))
 
 // messages from website/popup
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
   let tabId = null
   if ('tab' in sender)
     tabId = sender.tab.id
@@ -271,12 +275,12 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 // native/mpris
 let nativePort = browser.runtime.connectNative('schmidts_katz_mpris')
-nativePort.onMessage.addListener((message) => {
+nativePort.onMessage.addListener(message => {
   let action = message.action
   delete message['action']
   processMessage(action, message)
 })
-nativePort.onDisconnect.addListener((port) => {
+nativePort.onDisconnect.addListener(port => {
   if (port.error)
     console.log(`Disconnected due to an error: ${port.error.message}`);
 })

@@ -4,18 +4,23 @@ Control your music and videos with Schmidt's Katz's keyboard shortcuts.
 This plugin aims to be feature-complete - you can change volume, seek or even modify the playback rate using keystroke commands.
 To use shortcuts outside Firefox, a native interface integrates this plugin into MPRIS on Linux.
 
+## Supported Browsers
+- Firefox
+- Chromium
+- Google Chrome
+- Probably other Chromium based browser
+
 ## Build
 
-After clone, run `yarn` and `yarn firefox` to create a zip and install mpris native manifest file on linux.
-For chromium run `yarn chromium`, for google chrome run `yarn google-chrome`.
-
-### Chromium certificate
-
-`openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes`
+After clone, run `yarn ${browser}` to prepare building for a specific browser and to install mpris if you are on linux.
+Browser must be one of the following:
+- firefox
+- chromium
+- google-chrome
 
 ## MPRIS
 
-`yarn firefox` installs mpris manifest file.
+`yarn ${browser}` installs mpris manifest file.
 
 ## Documentation
 
@@ -48,7 +53,6 @@ This function can be used as last measurement to get access to privately defined
 
 ## TODOs
 
-- Support for more websites
 - CI/test playback rate/artwork
 - Popup
   - scroll title
@@ -56,4 +60,3 @@ This function can be used as last measurement to get access to privately defined
 - Integration tests
 - disable class depending on for attribute: https://stackoverflow.com/questions/1186416/jquery-selector-for-the-label-of-a-checkbox#1186423
 - Window 10 media overlay
-

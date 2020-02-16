@@ -6,10 +6,10 @@ let playerCurrentTime = 0
 let status = null
 
 function sendMessage(action, parameters = []) {
-  message = {}
-  message.action = action
+  let message = {}
   for (let attrName in parameters)
     message[attrName] = parameters[attrName]
+  message.action = action
   message = JSON.stringify(message)
   let sizeBuffer = Buffer.alloc(4)
   sizeBuffer.writeInt32LE(message.length)

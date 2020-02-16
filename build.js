@@ -1,9 +1,6 @@
 #!/usr/bin/node
 
 const fs = require('fs')
-const glob = require('glob')
-const archiver = require('archiver')
-const ChromiumExtension = require('crx')
 
 const homedir = require('os').homedir()
 // location where mpris.js is located
@@ -11,14 +8,6 @@ const nativeScriptPath = process.cwd()
 // create intermediate directories w.o. throwing errors
 const mkdirOptions = {
   recursive: true
-}
-// glob source w.o. deps/build files/mpris
-const globOptions = {
-  ignore: [
-    'node_modules/**',
-    'build.js',
-    'mpris.js'
-  ]
 }
 
 // some helper functions to replace string in file(s)
@@ -29,18 +18,9 @@ function replaceInFile(file, replacements) {
     for (let replacement of replacements) {
       data = data.replace(replacement[0], replacement[1])
     }
-    fs.writeFile(file, data, (error) => {
+    fs.writeFile(file, data, error => {
       if (error) throw error
     })
-  })
-}
-
-function replaceInFiles(pattern, replacements) {
-  glob(pattern, globOptions, (error, files) => {
-    if (error) throw error
-    for (let file of files) {
-      replaceInFile(file, replacements)
-    }
   })
 }
 
@@ -57,61 +37,6 @@ function prepare(browser) {
           `${fontawesomeTargetPath}/webfonts/fa-solid-900.woff2`)
   fs.copyFileSync(`${fontawesomeNpmPath}/webfonts/fa-solid-900.woff`,
           `${fontawesomeTargetPath}/webfonts/fa-solid-900.woff`)
-  switch(browser) {
-    case 'firefox':
-      replaceInFiles('**/*.js', [
-        [/chrome\./g, 'browser.']
-      ])
-      break
-    case 'chromium':
-    case 'google-chrome':
-      replaceInFiles('**/*.js', [
-        [/browser\./g, 'chrome.']
-      ])
-      break
-  }
-}
-
-function build(browser) {
-  filename = 'release'
-  let patterns = [
-      '**/*.js',
-      'manifest.json',
-      'icons/icon128.png',
-      'icons/fontawesome/css/*',
-      'icons/fontawesome/webfonts/*'
-  ]
-  let files = []
-  for (let pattern of patterns) {
-    files = files.concat(glob.sync(pattern, globOptions))
-  }
-  switch(browser) {
-    case 'firefox':
-      let buildStream = fs.createWriteStream(`${filename}.xpi`)
-      let archive = archiver('zip')
-      for (let file of files) {
-        archive.file(file)
-      }
-      archive.pipe(buildStream)
-      archive.finalize()
-      break
-    case 'chromium':
-    case 'google-chrome':
-      const crx = new ChromiumExtension({
-        privateKey: fs.readFileSync('./key.pem')
-      })
-      crx.load(files)
-        .then(crx => crx.pack())
-        .then(crxBuffer => {
-          fs.writeFile(`${filename}.crx`, crxBuffer, (error) => {
-            if (error) throw error
-          })
-        })
-        .catch(error => {
-          if (error) throw error
-        })
-      break
-  }
 }
 
 function mpris(browser) {
@@ -153,14 +78,13 @@ let supportedBrowsers = [
 const description = `first argument must be browser: ${supportedBrowsers}`
 if (process.argv.length < 3) {
   console.log(description)
-  return 1
+  process.exit(1)
 }
 let browser = process.argv[2]
 if (!supportedBrowsers.includes(browser)) {
   console.log(description)
-  return 2
+  process.exit(2)
 }
 prepare(browser)
-build(browser)
 if (process.platform === 'linux')
   mpris(browser)

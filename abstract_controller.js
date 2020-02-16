@@ -1,4 +1,5 @@
 let $ = document.querySelector.bind(document)
+if (window.chrome) window.browser = window.chrome
 
 /**
  * This class is similar to html5 video/audio, but with some additions
@@ -226,7 +227,7 @@ class AbstractController {
     return status
   }
 
-  onMessage(message, sender, sendResponse) {
+  onMessage(message, _sender, _sendResponse) {
     let forceUpdate = false
     switch (message.action) {
       case 'play':
@@ -338,7 +339,8 @@ class AbstractController {
   /**
    * expects scrollbar to be horizontal unused at the moment
    * @param {string} selector element/scrollbar to click on
-   * @param {float} percentage 0 <= percentage <= 1.0, value to click on scrollbar
+   * @param {float} percentage 0 <= percentage <= 1.0, 
+   *                           value to click on scrollbar
    * @returns true if element found, false otherwise
    */
   clickScrollbar(selector, percentage) {
@@ -363,7 +365,7 @@ class AbstractController {
   textToTime(text) {
     if (!text)
       return
-    let numbers = text.split(':').reverse().map((text) => parseInt(text))
+    let numbers = text.split(':').reverse().map(text => parseInt(text))
     const factors = [1, 60, 3600]
     let time = 0
     for (let i = 0; i < numbers.length; i++) {
@@ -408,13 +410,15 @@ class AbstractController {
 
   /**
    * send status to background if a attribute changed
-   * @param {bool} forceUpdate if true, this will always send the message even without changes
+   * @param {bool} forceUpdate if true, this will always send the message,
+   * even without changes
    */
   updateStatus(forceUpdate) {
     if (!this.isRegistered)
       return
     let status = this.status()
-    if (JSON.stringify(status) == JSON.stringify(this.statusCache) && !forceUpdate)
+    if (JSON.stringify(status) == JSON.stringify(this.statusCache)
+      && !forceUpdate)
       return
     this.statusCache = status
     browser.runtime.sendMessage({
@@ -430,8 +434,10 @@ function mutationObserverAutoRegister(
     controller,
     registerCallback = () => {},
     unregisterCallback = () => {}) {
-  if (controller.isRegistered)
+  if (controller.isRegistered) {
+    console.log('controller already registered')
     registerCallback()
+  }
   let observer = new MutationObserver(() => {
     if (controller.isAvailable()) {
       if (!controller.isRegistered) {
@@ -452,7 +458,8 @@ function mutationObserverAutoRegister(
     childList: true,
     subtree: true
   })
-  window.addEventListener('beforeunload', controller.unregisterController.bind(controller))
+  window.addEventListener('beforeunload', 
+   controller.unregisterController.bind(controller))
   return observer
 }
 

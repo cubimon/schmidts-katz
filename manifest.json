@@ -11,6 +11,11 @@
     "default_title": "Schmidt's Katz",
     "default_popup": "popup/popup.html"
   },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "schmidts_katz@cubimon.org"
+    }
+  },
   "background": {
     "scripts": ["background.js"]
   },

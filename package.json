@@ -21,10 +21,8 @@
     "@fortawesome/fontawesome-free": "^5.11.2"
   },
   "dependencies": {
-    "archiver": "^3.1.1",
-    "crx": "^5.0.1",
-    "glob": "^7.1.6",
     "mpris-service": "^2.1.0",
-    "selenium-webdriver": "^4.0.0-alpha.5"
+    "selenium-webdriver": "^4.0.0-alpha.5",
+    "web-ext": "^4.1.0"
   }
 }
