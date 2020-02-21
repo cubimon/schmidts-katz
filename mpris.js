@@ -10,11 +10,10 @@ function sendMessage(action, parameters = []) {
   for (let attrName in parameters)
     message[attrName] = parameters[attrName]
   message.action = action
-  message = JSON.stringify(message)
-  let sizeBuffer = Buffer.alloc(4)
-  sizeBuffer.writeInt32LE(message.length)
-  process.stdout.write(sizeBuffer)
-  process.stdout.write(message)
+  let buffer = Buffer.from(JSON.stringify(message))
+  let header = Buffer.alloc(4)
+  header.writeInt32LE(buffer.length, 0)
+  process.stdout.write(Buffer.concat([header, buffer]))
 }
 
 function play() {
@@ -90,22 +89,7 @@ function unregisterPlayer() {
   player = null
 }
 
-let buffer = Buffer.alloc(0)
-process.stdin.on('data', (chunk) => {
-  buffer =  Buffer.concat([buffer, chunk])
-  if (buffer.length < 4)
-    return
-  let size = buffer.readInt32LE()
-  // not enough data
-  if (buffer.length - 4 < size)
-    return
-  let message = chunk.toString('utf-8', 4)
-  buffer = buffer.slice(size + 4)
-  try {
-    message = JSON.parse(message)
-  } catch (err) {
-    return
-  }
+function handleMessage(message) {
   if (!'action' in message)
     return
   switch (message.action) {
@@ -138,8 +122,25 @@ process.stdin.on('data', (chunk) => {
         metadata['xesam:title'] = status.title
       player.metadata = metadata
       player.canSeek = 'currentTime' in status && 'duration' in status
-      player.volume = status.volume
-      player.rate = status.playbackRate
+      if ('volume' in status)
+        player.volume = status.volume
+      if ('playbackRate' in status)
+        player.rate = status.playbackRate
       break
   }
+}
+
+let buffer = Buffer.alloc(0)
+process.stdin.on('data', (chunk) => {
+  buffer =  Buffer.concat([buffer, chunk])
+  if (buffer.length < 4)
+    // not enough data
+    return
+  let size = buffer.readInt32LE()
+  if (buffer.length - 4 < size)
+    // not enough data
+    return
+  message = JSON.parse(buffer.toString('utf-8', 4, 4 + size))
+  buffer = buffer.slice(size + 4)
+  handleMessage(message)
 })

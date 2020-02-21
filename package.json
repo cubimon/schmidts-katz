@@ -21,6 +21,8 @@
     "@fortawesome/fontawesome-free": "^5.11.2"
   },
   "dependencies": {
+    "dbus-next": "^0.8.2",
+    "geckodriver": "^1.19.1",
     "mpris-service": "^2.1.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "web-ext": "^4.1.0"

@@ -148,13 +148,14 @@ function processMessage(action, message, tabId) {
       if (Object.keys(controllers).length == 1) {
         // first controller
         try {
+          console.log('mpris registration')
           nativePort.postMessage({
             action: 'register'
           })
           nativePort.postMessage({
             action: 'update-status',
             status: message.status
-        })
+          })
         } catch (e) {
           console.log(e)
         }

@@ -69,7 +69,7 @@ class AbstractController {
           break
       }
     }
-    if (this.getMedia())
+    if (this.isAvailable())
       this.registerController()
     browser.runtime.onMessage.addListener(this.onMessage.bind(this))
   }
@@ -390,6 +390,7 @@ class AbstractController {
     if (this.isRegistered)
       return
     this.isRegistered = true
+    console.log('register controller method called')
     browser.runtime.sendMessage({
       action: 'register',
       status: this.status()
@@ -403,6 +404,7 @@ class AbstractController {
     if (!this.isRegistered)
       return
     this.isRegistered = false
+    console.log('register controller method called')
     browser.runtime.sendMessage({
       action: 'unregister'
     })
@@ -473,7 +475,7 @@ function intervalAutoRegister(
   if (controller.isRegistered)
     registerCallback()
   setInterval(() => {
-    if (controller.getMedia()) {
+    if (controller.isAvailable()) {
       if (!controller.isRegistered) {
         controller.unregisterController
         registerCallback()
