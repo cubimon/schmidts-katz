@@ -30,9 +30,6 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-// TODO: test set time
-// TODO: duration
-// TODO: video register if time was found
 class MPRISPlayer {
 
   constructor(name) {
@@ -102,6 +99,10 @@ class MPRISPlayer {
     await this.playerIface.Pause()
   }
 
+  async isPlaying() {
+    return await this.getProperty('PlaybackStatus') == 'Playing'
+  }
+
   async getProperty(name) {
     let property = await this.propertiesIface.Get(
       'org.mpris.MediaPlayer2.Player', name)
@@ -142,33 +143,46 @@ async function main() {
 
   try {
     await driver.execute(command)
-    await driver.get('https://www.youtube.com/watch?v=Xk81pq2d_BQ')
-    let player = new MPRISPlayer('Schmidts_Katz')
-    await player.init()
-    console.log('wait until some video time passed')
-    while (await player.getCurrentTime() < 1.0) {
-      // wait until some time in video passed
-      await sleep(1000)
+    let testUrls = [
+      'https://www.youtube.com/watch?v=Xk81pq2d_BQ',
+      'https://www.youtube.com/watch?v=UMPC8QJF6sI&list=RDCLAK5uy_khNGopKCT_t38MZ1W7z4kERrqprkXovxo',
+      'https://www.twitch.tv/videos/367046564'
+    ]
+    // TODO: playbackrate, mute, seek, video duration
+    for (let testUrl of testUrls) {
+      console.log(`url: ${testUrl}`)
+      await driver.get(testUrl)
+      let player = new MPRISPlayer('Schmidts_Katz')
+      await player.init()
+      console.log('wait until some video time passed')
+      let playerTime = await player.getCurrentTime()
+      while (playerTime  < 2.0 || playerTime > 5.0) {
+        // wait until some time in video passed
+        await sleep(1000)
+        playerTime = await player.getCurrentTime()
+      }
+      console.log(`video start time: ${await player.getCurrentTime()}`)
+      // time
+      let startTime = await player.getCurrentTime()
+      console.log(`startTime: ${startTime}`)
+      await player.play()
+      await sleep(5000)
+      await assertTimeout(async () => await player.isPlaying() == true, 2000)
+      await player.pause()
+      await assertTimeout(async () => await player.isPlaying() == false, 2000)
+      let endTime = await player.getCurrentTime()
+      console.log(`endTime: ${endTime}`)
+      let duration = endTime - startTime
+      console.log(`duration: ${duration}`)
+      assert(duration < 5.2 && duration > 4.8)
+      // volume
+      await player.setVolume(0.8)
+      await assertTimeout(async () => await player.getVolume() == 0.8, 2000)
+      console.log(`volume: ${await player.getVolume()}`)
+      await player.setVolume(0.42)
+      await assertTimeout(async () => await player.getVolume() == 0.42, 2000)
+      console.log(`volume: ${await player.getVolume()}`)
     }
-    console.log(`video start time: ${await player.getCurrentTime()}`)
-    // time
-    let startTime = await player.getCurrentTime()
-    console.log(`startTime: ${startTime}`)
-    await player.play()
-    await sleep(1000)
-    await player.pause()
-    let endTime = await player.getCurrentTime()
-    console.log(`endTime: ${endTime}`)
-    let duration = endTime - startTime
-    console.log(`duration: ${duration}`)
-    assert(duration < 1.2 && duration > 0.8)
-    // volume
-    await player.setVolume(0.8)
-    await assertTimeout(async () => await player.getVolume() == 0.8, 2000)
-    console.log(`volume: ${await player.getVolume()}`)
-    await player.setVolume(0.42)
-    await assertTimeout(async () => await player.getVolume() == 0.42, 2000)
-    console.log(`volume: ${await player.getVolume()}`)
   } finally {
     //await driver.quit()
   }
