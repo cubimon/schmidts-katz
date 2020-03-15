@@ -1,6 +1,6 @@
 {
   "name": "schmidts-katz",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Universl media shortcut key",
   "scripts": {
     "firefox": "node build.js firefox",
@@ -24,7 +24,7 @@
     "dbus-next": "^0.8.2",
     "geckodriver": "^1.19.1",
     "mpris-service": "^2.1.0",
-    "selenium-webdriver": "^4.0.0-alpha.5",
+    "selenium-webdriver": "^4.0.0-alpha.7",
     "web-ext": "^4.1.0"
   }
 }

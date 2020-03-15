@@ -22,6 +22,14 @@ Browser must be one of the following:
 
 `yarn ${browser}` installs mpris manifest file.
 
+## Changelog
+
+### 1.2
+
+scrollbar fix
+mpris fix
+chrome support
+
 ## Documentation
 
 This plugin tries to use as many features of the standard html5 audio/video api.
