@@ -18,7 +18,7 @@
     "url": "git://github.com/cubimon/Schmidt-s-Katz.git"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.13.0"
+    "@fortawesome/fontawesome-free": "^5.13.1"
   },
   "dependencies": {
     "dbus-next": "^0.8.2",
