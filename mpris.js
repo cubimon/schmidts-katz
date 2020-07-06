@@ -3,7 +3,6 @@ let Player = require('mpris-service')
 
 let player = null
 let playerCurrentTime = 0
-let status = null
 
 function sendMessage(action, parameters = []) {
   let message = {}
@@ -25,7 +24,7 @@ function pause() {
 }
 
 function playPause() {
-  if (status != null && controller.paused)
+  if (player.playbackStatus == 'Paused')
     sendMessage('play')
   else
     sendMessage('pause')
@@ -102,7 +101,7 @@ function handleMessage(message) {
     case 'update-status':
       if (player == null)
         return
-      status = message.status
+      let status = message.status
       if ('paused' in status && !status.paused)
         player.playbackStatus = 'Playing'
       else
