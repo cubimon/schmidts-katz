@@ -33,16 +33,6 @@ class NetflixController extends AbstractController {
     player.setVolume(${volume});`
     this.execute(code)
   }
-
-  get playbackRate() {
-    return super.playbackRate
-  }
-
-  set playbackRate(playbackRate) {
-    let code = this.netflixPlayer + `
-    player.setPlaybackRate(${playbackRate});`
-    this.execute(code)
-  }
 }
 
 function registeredCallback() {
