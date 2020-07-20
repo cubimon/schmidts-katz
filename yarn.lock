@@ -74,11 +74,6 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.14.0.tgz#a371e91029ebf265015e64f81bfbf7d228c9681f"
   integrity sha512-OfdMsF+ZQgdKHP9jUbmDcRrP0eX90XXrsXIdyjLbkmSBzmMXPABB8eobUJtivaupucYaByz6WNe1PI1JuYm3qA==
 
-"@nornagon/put@0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@nornagon/put/-/put-0.0.8.tgz#9d497ec46c9364acc3f8b59aa3cf8ee4134ae337"
-  integrity sha512-ugvXJjwF5ldtUpa7D95kruNJ41yFQDEKyF5CW4TgKJnh+W/zmlBzXXeKTyqIgwMFrkePN2JqOBqcF0M0oOunow==
-
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -1018,21 +1013,6 @@ dbus-next@^0.5.1:
     jsbi "^2.0.5"
     long "^4.0.0"
     put "0.0.6"
-    safe-buffer "^5.1.1"
-    xml2js "^0.4.17"
-  optionalDependencies:
-    abstract-socket "^2.0.0"
-
-dbus-next@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.8.2.tgz#b53beec47812e643d4c24a96f7ce223c32aa2edb"
-  integrity sha512-E2wkbhZzzsgmY+jxIdeuhA1nVT697I5koRIRJTk3doTeukwtzqSFG89RC5XK8OsLG/eHDZ8PVNptUuEPkhdPbA==
-  dependencies:
-    "@nornagon/put" "0.0.8"
-    event-stream "3.3.4"
-    hexy "^0.2.10"
-    jsbi "^2.0.5"
-    long "^4.0.0"
     safe-buffer "^5.1.1"
     xml2js "^0.4.17"
   optionalDependencies:

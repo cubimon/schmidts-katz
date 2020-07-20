@@ -40,28 +40,28 @@ class AbstractController {
           this.playPrev = this.click.bind(this, optionValue)
           this.canPlayPrev = () => {
             let element = $(optionValue)
-            return element && this.isVisible(element)
+            return element !== null && this.isVisible(element)
           }
           break
         case 'playNext':
           this.playNext = this.click.bind(this, optionValue)
           this.canPlayNext = () => {
             let element = $(optionValue)
-            return element && this.isVisible(element)
+            return element !== null && this.isVisible(element)
           }
           break
         case 'like':
           this.like = this.click.bind(this, optionValue)
           this.canLike = () => {
             let element = $(optionValue)
-            return element && this.isVisible(element)
+            return element !== null && this.isVisible(element)
           }
           break
         case 'dislike':
           this.dislike = this.click.bind(this, optionValue)
           this.canDislike = () => {
             let element = $(optionValue)
-            return element && this.isVisible(element)
+            return element !== null && this.isVisible(element)
           }
           break
         case 'title':

@@ -114,7 +114,7 @@ function handleMessage(message) {
       }
       // sec to us
       if ('duration' in status)
-        metadata['mpris:length'] = status.duration * 1000 * 1000
+        metadata['mpris:length'] = Math.round(status.duration * 1000 * 1000)
       if ('artUrl' in status)
         metadata['mpris:artUrl'] = status.artUrl
       if ('title' in status)
