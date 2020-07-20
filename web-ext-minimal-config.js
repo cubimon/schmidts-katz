@@ -7,7 +7,8 @@ module.exports = {
     'package-lock.json',
     'README.md',
     'test',
-    'web-ext-config.js',
+    'web-ext-minimal-config.js',
+    'package.json',
     'yarn.lock'
   ]
 }

@@ -5,7 +5,8 @@
   "scripts": {
     "firefox": "node build.js firefox",
     "chromium": "node build.js chromium",
-    "google-chrome": "node build.js google-chrome"
+    "google-chrome": "node build.js google-chrome",
+    "build": "web-ext build -c web-ext-minimal-config.js"
   },
   "keywords": [
     "commands",
