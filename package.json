@@ -1,7 +1,7 @@
 {
   "name": "schmidts-katz",
   "version": "1.2.0",
-  "description": "Universl media shortcut key",
+  "description": "Universal media shortcut key",
   "scripts": {
     "firefox": "node build.js firefox",
     "chromium": "node build.js chromium",
