@@ -25,6 +25,6 @@
     "web-ext": "^5.5.0"
   },
   "dependencies": {
-    "mpris-service": "^2.1.0"
+    "mpris-service": "^2.1.2"
   }
 }
