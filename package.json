@@ -22,7 +22,7 @@
     "@fortawesome/fontawesome-free": "^6.1.1",
     "geckodriver": "^1.22.1",
     "selenium-webdriver": "^4.2.0",
-    "web-ext": "^7.0.0"
+    "web-ext": "^7.1.0"
   },
   "dependencies": {
     "mpris-service": "^2.1.2"
