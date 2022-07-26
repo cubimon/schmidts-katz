@@ -19,7 +19,7 @@
     "url": "git://github.com/cubimon/Schmidt-s-Katz.git"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^6.1.1",
+    "@fortawesome/fontawesome-free": "^6.1.2",
     "geckodriver": "^1.22.1",
     "selenium-webdriver": "^4.2.0",
     "web-ext": "^7.0.0"
